@@ -10,5 +10,5 @@
         "guiName": "Unicast (patch 92/100/MT)",
         "cliName": "Unicast"
     },
-    "servers": ["https://raw.githubusercontent.com/tera-private-mods/unicast/master/","https://git.teramods.ml/tera-private-mods/unicast/raw/master/"]
+    "servers": ["https://raw.githubusercontent.com/tera-private-mods/unicast/master/","https://git.teragame.su/tera-private-mods/unicast/raw/master/"]
 }
