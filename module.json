@@ -1,0 +1,14 @@
+{
+    "author": "FRÜT & PÅNT",
+    "dependencies": {
+        "ui": "https://raw.githubusercontent.com/HakuryuuDom/ui/master/module.json"
+    },
+    "description": "Costume and appareance changer with in-game UI. Full support for patches 92 and 100, including Menma's TERA (MT) and Asura TERA.",
+    "disableAutoUpdate": false,
+    "name": "unicast",
+    "options": {
+        "guiName": "Unicast (patch 92/100/MT)",
+        "cliName": "Unicast"
+    },
+    "servers": ["https://raw.githubusercontent.com/tera-private-mods/unicast/master/","https://git.teramods.ml/tera-private-mods/unicast/raw/master/"]
+}

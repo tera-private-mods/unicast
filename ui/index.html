@@ -1,0 +1,1577 @@
+<html>
+
+<head>
+    <script src="/_TERAToolbox/browserInit.js"></script>
+    <script defer src="./vars"></script>
+    <script>
+        if (typeof _tera_client_proxy_.alert != "undefined") {
+            window.alert = function() {
+                return _tera_client_proxy_.alert.apply(this, arguments);
+            };
+        }
+
+        window.addEventListener('error', function (e) {
+            alert('[Unicast] Error: ' + e.message + ' (Line: ' + e.lineno + ')')
+        })
+
+        window.onload = function () {
+            _tera_client_proxy_.resize_to(440, Number(window.uBrowserHeight) || 720)
+            _tera_client_proxy_.set_title('Unicast')
+        }
+    </script>
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/vue.js?2.5.16"></script>
+    <script src="./js/vue-paginate.js"></script>
+    <script src="./js/client.js"></script>
+    <script src="./js/vue-color.js"></script>
+    <script defer src="./js/main.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/base.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Navbar -->
+        <div class="nav">
+            <div class="navcontainer">
+                <a class="smooth pagename" :class="{current: activeTab === index}" v-for="(tab, index) in tabs"
+                    @click="activeTab = index, activeSubTab = 0, itemCategory = 0, filterCategory = cats[activeSubTab][ typeof cats[activeSubTab][itemCategory] === 'undefined' ? 0 : itemCategory]"
+                    v-html="tab"></a>
+            </div>
+        </div>
+
+        <!-- SubNav & SubSubNavbar??? -->
+        <div class="subnav" v-if="activeTab !== 1 && typeof subTabs[activeTab] !== 'undefined'">
+            <div class="navcontainer">
+                <a v-for="(sub, index) in subTabs[activeTab]" class="pagename"
+                    :class="{current: activeSubTab === subTabs[activeTab].indexOf(sub)}"
+                    @click="activeSubTab = subTabs[activeTab].indexOf(sub), filterKey = '', filterCategory = cats[activeSubTab][ typeof cats[activeSubTab][itemCategory] === 'undefined' ? 0 : itemCategory]"
+                    v-html="sub"></a>
+            </div>
+        </div>
+
+        <!-- Catalogue sub sub sub usb-->
+        <div class="subnav" v-if="activeTab === 3 && (activeSubTab === 0 || activeSubTab === 1)">
+            <div class="navcontainer">
+                <a class="smooth pagename" :class="{current: itemCategory === 0}"
+                    @click="filterCategory = cats[activeSubTab][0], itemCategory = 0, $refs.paginator ? $refs.paginator.goToPage(1) : ''">Weapons</a>
+
+                <a class="smooth pagename" :class="{current: itemCategory === 1}"
+                    @click="filterCategory = cats[activeSubTab][1], itemCategory = 1, $refs.paginator ? $refs.paginator.goToPage(1) : ''">Body</a>
+
+                <a class="smooth pagename" :class="{current: itemCategory === 2}" v-if="activeSubTab === 0"
+                    @click="filterCategory = cats[activeSubTab][2], itemCategory = 2, $refs.paginator ? $refs.paginator.goToPage(1) : ''">Back</a>
+
+                <a class="smooth pagename" :class="{current: itemCategory === 3}"
+                    @click="filterCategory = cats[activeSubTab][3], itemCategory = 3, $refs.paginator ? $refs.paginator.goToPage(1) : ''">Face</a>
+
+                <a class="smooth pagename" :class="{current: itemCategory === 4}" v-if="activeSubTab === 0"
+                    @click="filterCategory = cats[activeSubTab][4], itemCategory = 4, $refs.paginator ? $refs.paginator.goToPage(1) : ''">Head</a>
+
+                <a class="smooth pagename" :class="{current: itemCategory === 5}" v-if="activeSubTab === 1"
+                    @click="filterCategory = cats[activeSubTab][5], itemCategory = 5, $refs.paginator ? $refs.paginator.goToPage(1) : ''">Underwear</a>
+            </div>
+        </div>
+
+        <!-- Mounts & pet subsubsubs -->
+        <div class="subnav" v-if="activeTab === 3 && activeSubTab === 2">
+            <div class="navcontainer">
+                <a class="smooth pagename" :class="{current: itemCategory === 0}"
+                    @click="filterCategory = cats[activeSubTab][0], itemCategory = 0, $refs.paginator ? $refs.paginator.goToPage(1) : ''">Mounts</a>
+                <a class="smooth pagename" :class="{current: itemCategory === 1}"
+                    @click="filterCategory = cats[activeSubTab][1], itemCategory = 1, $refs.paginator ? $refs.paginator.goToPage(1) : ''">Pets</a>
+            </div>
+        </div>
+
+        <!-- Favs -->
+        <div class="container" v-if="activeTab === 0">
+
+            <!-- Items -->
+            <div v-if="activeSubTab === 0">
+                <form>
+                    <div class="filter">
+                        <input class="smooth" v-model='bookmarksFilterKey' placeholder='Search for ...'><i
+                            class="smooth addon fa fa-sort-alpha-asc" :class="{'selected-sort': sort == 1}"
+                            @click="sort = 1"></i>
+                        <i class="smooth addon fa fa-sort-alpha-desc" :class="{'selected-sort': sort == -1}"
+                            @click="sort = -1"></i>
+                    </div>
+                </form>
+
+                <paginate tag="div" ref="paginator" name="favs" :list="filteredBookmarks" :per="9"
+                    v-if="filteredBookmarks.length > 0">
+
+                    <div class="content" v-for="item in paginated('favs')" :key="item">
+                        <div class="icon" v-if="bookmarks['items'].indexOf(item) > -1">
+                            <img class="smooth" :class="{active: equipped.indexOf(item) > -1}"
+                                :src="'https://static.teragame.su/unicast-data/icons/' + unidata.items[item].icon + '.png'"
+                                @click="equip(item)">
+                        </div>
+                        <div class="entry" v-if="bookmarks['items'].indexOf(item) > -1">
+                            <i class="smooth fa fa-star bookmark-icon"
+                                :class="{bookmarked: bookmarks['items'].indexOf(item) > -1}"
+                                @click="bookmark(item, 'items')"></i>
+                            <span>{{unidata.items[item].name}}</span>
+                        </div>
+                    </div>
+
+
+                </paginate>
+
+                <div class="footer" align="center" v-if="$refs.paginator">
+                    <div class="container">
+                        <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                        <a class="smooth pagination">{{$refs.paginator.currentPage +
+                            1}}/{{$refs.paginator.lastPage}}</a>
+
+                        <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                        <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                        <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mounts -->
+            <div v-if="activeSubTab === 1">
+                <form>
+                    <div class="filter">
+                        <input class="smooth" v-model='favMountFilter' placeholder='Search for ...'><i
+                            class="smooth addon fa fa-sort-alpha-asc" :class="{'selected-sort': sort == 1}"
+                            @click="sort = 1"></i>
+                        <i class="smooth addon fa fa-sort-alpha-desc" :class="{'selected-sort': sort == -1}"
+                            @click="sort = -1"></i>
+                    </div>
+                </form>
+
+                <paginate tag="div" ref="paginator" name="favMounts" :list="filteredFavMounts" :per="9"
+                    v-if="filteredFavMounts.length > 0">
+
+                    <div class="content" v-for="item in paginated('favMounts')" :key="item.id">
+                        <div class="icon">
+                            <img class="smooth" :class="{active: equipped.indexOf(item.id) > -1}"
+                                :src="'https://static.teragame.su/unicast-data/icons/' + item.icon + '.png'"
+                                @click="equipMount(item.id)">
+                        </div>
+                        <div class="entry">
+                            <i class="smooth fa fa-star bookmark-icon"
+                                :class="{bookmarked: bookmarks['mounts'].indexOf(item.id) > -1}"
+                                @click="bookmark(item.id, 'mounts')"></i>
+                            <span>{{item.name}}</span>
+                        </div>
+                    </div>
+
+
+                </paginate>
+                <div class="footer" align="center" v-if="$refs.paginator">
+                    <div class="container">
+                        <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                        <a class="smooth pagination">{{$refs.paginator.currentPage +
+                            1}}/{{$refs.paginator.lastPage}}</a>
+
+                        <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                        <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                        <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pets -->
+            <div v-if="activeSubTab === 2">
+                <form>
+                    <div class="filter">
+                        <input class="smooth" v-model='favPetFilter' placeholder='Search for ...'><i
+                            class="smooth addon fa fa-sort-alpha-asc" :class="{'selected-sort': sort == 1}"
+                            @click="sort = 1"></i>
+                        <i class="smooth addon fa fa-sort-alpha-desc" :class="{'selected-sort': sort == -1}"
+                            @click="sort = -1"></i>
+                    </div>
+                </form>
+
+                <paginate tag="div" ref="paginator" name="favPets" :list="filteredFavPets" :per="12"
+                    v-if="filteredFavPets.length > 0">
+                    <div class="content list" v-for="pet in paginated('favPets')" :key="pet.key"
+                        @click="usePet(pet.key)">
+                        <i class="smooth fa fa-star bookmark-icon"
+                            :class="{bookmarked: bookmarks['pets'].indexOf(pet.key) > -1}"
+                            @click.stop="bookmark(pet.key, 'pets')"></i>
+                        <div class="smooth list-icon" :class="{activelist: ws_unicast.uniPet === pet.key}"></div>
+                        <span class="list-text">{{pet.name}}</span>
+                    </div>
+                </paginate>
+                <div class="footer" align="center" v-if="$refs.paginator">
+                    <div class="container">
+                        <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                        <a class="smooth pagination">{{$refs.paginator.currentPage +
+                            1}}/{{$refs.paginator.lastPage}}</a>
+
+                        <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                        <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                        <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aeros -->
+            <div v-if="activeSubTab === 3">
+                <paginate tag="div" ref="paginator" name="favSkies" :list="bookmarks['skies']" :per="15"
+                    v-if="bookmarks['skies'].length > 0">
+                    <div class="content list" v-for="(aero, idx) in paginated('favSkies')" @click="equipAero(aero)">
+                        <i class="smooth fa fa-star bookmark-icon"
+                            :class="{bookmarked: bookmarks['skies'].indexOf(aero) > -1}"
+                            @click.stop="bookmark(aero, 'skies')"></i>
+                        <div class="smooth list-icon"
+                            :class="{activelist: ws_unicast.aeroSky && ws_unicast.aeroSky === aero}">
+                        </div>
+                        <span class="list-text">{{aerolist[aero]}}</span>
+                    </div>
+                </paginate>
+                <div class="footer" align="center" v-if="$refs.paginator">
+                    <div class="container">
+                        <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                        <a class="smooth pagination">{{$refs.paginator.currentPage +
+                            1}}/{{$refs.paginator.lastPage}}</a>
+
+                        <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                        <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                        <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Presets -->
+            <div v-if="activeSubTab === 4">
+
+                <form class="presetInput">
+                    <div class="filter">
+                        <input class="smooth" v-model='presetName' placeholder='Preset name ...'><a
+                            class="addon fa fa-floppy-o" @click="SavePreset(), presetName=''"> Save</a>
+                    </div>
+                </form>
+
+                <paginate tag="div" ref="paginator" name="presets" :list="filteredPresets" :per="9"
+                    v-if="filteredPresets && filteredPresets.length > 0">
+
+                    <div class="content list" v-for="item in paginated('presets')" :key="item" @click="usePreset(item)">
+                        <span>{{item}}</span>
+                    </div>
+
+
+                </paginate>
+
+                <div class="footer" align="center" v-if="$refs.paginator">
+                    <div class="container">
+                        <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                        <a class="smooth pagination">{{$refs.paginator.currentPage +
+                            1}}/{{$refs.paginator.lastPage}}</a>
+
+                        <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                        <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                        <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Character -->
+        <div class="container logo" v-if="activeTab === 1">
+            <!-- Costume -->
+            <div class="container-a">
+                <div class="equipped-headers">
+                    <h2 class="costume-header">Costume</h2>
+                    <h2 class="gear-header">Gear</h2>
+                </div>
+                <!-- Head -->
+                <div class="container-b">
+                    <div class="equipped-costume"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.styleHead, 'styleHead') + ')'}"></div>
+                    <div class="equipped-slot" @click="unequip('styleHead')">
+                        <div class="tooltip-costume"
+                            v-if="unidata.items[ws_unicast.styleHead] && unidata.items[ws_unicast.styleHead].name">
+                            <div> {{unidata.items[ws_unicast.styleHead].name}} </div>
+                        </div>
+                    </div>
+                    <template v-if="unidata.items[ws_unicast.styleHead] && unidata.items[ws_unicast.styleHead].dyeable">
+                        <div class="dye-costume"></div>
+                        <div class="dye-costume-slot">
+                            <div class="dye-costume-popup">
+                                <chrome-picker v-model="dyeSlots.styleHeadDye"
+                                    @input="dyeSlot('styleHeadDye', $event.hexT)" />
+                            </div>
+                        </div>
+                    </template>
+                    <div class="equipped-gear"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.head, 'styleHead') + ')'}"></div>
+                    <div class="equipped-slot-gear" @click="unequip('head')">
+                        <div class="tooltip-gear"
+                            v-if="unidata.items[ws_unicast.head] && unidata.items[ws_unicast.head].name">
+                            <div> {{unidata.items[ws_unicast.head].name}} </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Face -->
+                <div class="container-b">
+                    <div class="equipped-costume"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.styleFace, 'styleFace') + ')'}"></div>
+                    <div class="equipped-slot" @click="unequip('styleFace')">
+                        <div class="tooltip-costume"
+                            v-if="unidata.items[ws_unicast.styleFace] && unidata.items[ws_unicast.styleFace].name">
+                            <div> {{unidata.items[ws_unicast.styleFace].name}} </div>
+                        </div>
+                    </div>
+                    <template v-if="unidata.items[ws_unicast.styleFace] && unidata.items[ws_unicast.styleFace].dyeable">
+                        <div class="dye-costume"></div>
+                        <div class="dye-costume-slot">
+                            <div class="dye-costume-popup">
+                                <chrome-picker v-model="dyeSlots.styleFaceDye"
+                                    @input="dyeSlot('styleFaceDye', $event.hexT)" />
+                            </div>
+                        </div>
+                    </template>
+                    <div class="swapper" @click="swap('styleFace','face')"></div>
+                    <div class="equipped-gear"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.face, 'styleFace') + ')'}"></div>
+                    <div class="equipped-slot-gear" @click="unequip('face')">
+                        <div class="tooltip-gear"
+                            v-if="unidata.items[ws_unicast.face] && unidata.items[ws_unicast.face].name">
+                            <div> {{unidata.items[ws_unicast.face].name}} </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Body -->
+                <div class="container-b">
+                    <div class="equipped-costume"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.styleBody, 'styleBody') + ')'}"></div>
+                    <div class="equipped-slot" @click="unequip('styleBody')">
+                        <div class="tooltip-costume"
+                            v-if="unidata.items[ws_unicast.styleBody] && unidata.items[ws_unicast.styleBody].name">
+                            <div> {{unidata.items[ws_unicast.styleBody].name}} </div>
+                        </div>
+                    </div>
+                    <template v-if="unidata.items[ws_unicast.styleBody] && unidata.items[ws_unicast.styleBody].dyeable">
+                        <div class="dye-costume"></div>
+                        <div class="dye-costume-slot">
+                            <div class="dye-costume-popup">
+                                <chrome-picker v-model="dyeSlots.styleBodyDye"
+                                    @input="dyeSlot('styleBodyDye', $event.hexT)" />
+                            </div>
+                        </div>
+                    </template>
+                    <div class="swapper" @click="swap('styleBody','body')"></div>
+                    <template v-if="unidata.items[ws_unicast.body] && unidata.items[ws_unicast.body].dyeable">
+                        <div class="dye-gear"></div>
+                        <div class="dye-gear-slot">
+                            <div class="dye-gear-popup">
+                                <chrome-picker v-model="dyeSlots.bodyDye"
+                                    @input="dyeSlot('bodyDye', $event.hexT)" />
+                            </div>
+                        </div>
+                    </template>
+                    <div class="equipped-gear"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.body, 'styleBody') + ')'}"></div>
+                    <div class="equipped-slot-gear" @click="unequip('body')">
+                        <div class="tooltip-gear"
+                            v-if="unidata.items[ws_unicast.body] && unidata.items[ws_unicast.body].name">
+                            <div> {{unidata.items[ws_unicast.body].name}} </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Weapon -->
+                <div class="container-b">
+                    <div class="equipped-costume"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.styleWeapon, 'styleWeapon') + ')'}">
+                    </div>
+                    <div class="equipped-slot" @click="unequip('styleWeapon')">
+                        <div class="tooltip-costume"
+                            v-if="unidata.items[ws_unicast.styleWeapon] && unidata.items[ws_unicast.styleWeapon].name">
+                            <div> {{unidata.items[ws_unicast.styleWeapon].name}} </div>
+                        </div>
+                    </div>
+                    <template
+                        v-if="unidata.items[ws_unicast.styleWeapon] && unidata.items[ws_unicast.styleWeapon].dyeable">
+                        <div class="dye-costume"></div>
+                        <div class="dye-costume-slot">
+                            <div class="dye-costume-popup">
+                                <chrome-picker v-model="dyeSlots.styleWeaponDye"
+                                    @input="dyeSlot('styleWeaponDye', $event.hexT)" />
+                            </div>
+                        </div>
+                    </template>
+                    <div class="swapper" @click="swap('styleWeapon','weapon')"></div>
+                    <template v-if="unidata.items[ws_unicast.weapon] && unidata.items[ws_unicast.weapon].dyeable">
+                        <div class="dye-gear"></div>
+                        <div class="dye-gear-slot">
+                            <div class="dye-gear-popup">
+                                <chrome-picker v-model="dyeSlots.weaponDye"
+                                    @input="dyeSlot('weaponDye', $event.hexT)" />
+                            </div>
+                        </div>
+                    </template>
+                    <div class="equipped-gear"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.weapon, 'styleWeapon') + ')'}"></div>
+                    <div class="equipped-slot-gear" @click="unequip('weapon')">
+                        <div class="tooltip-gear"
+                            v-if="unidata.items[ws_unicast.weapon] && unidata.items[ws_unicast.weapon].name">
+                            <div> {{unidata.items[ws_unicast.weapon].name}} </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- StyleBack & Hand -->
+                <div class="container-b">
+                    <div class="equipped-costume"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.styleBack, 'styleBack') + ')'}"></div>
+                    <div class="equipped-slot" @click="unequip('styleBack')">
+                        <div class="tooltip-costume"
+                            v-if="unidata.items[ws_unicast.styleBack] && unidata.items[ws_unicast.styleBack].name">
+                            <div> {{unidata.items[ws_unicast.styleBack].name}} </div>
+                        </div>
+                    </div>
+                    <template v-if="unidata.items[ws_unicast.styleBack] && unidata.items[ws_unicast.styleBack].dyeable">
+                        <div class="dye-costume"></div>
+                        <div class="dye-costume-slot">
+                            <div class="dye-costume-popup">
+                                <chrome-picker v-model="dyeSlots.styleBackDye"
+                                    @input="dyeSlot('styleBackDye', $event.hexT)" />
+                            </div>
+                        </div>
+                    </template>
+                    <template v-if="unidata.items[ws_unicast.hand] && unidata.items[ws_unicast.hand].dyeable">
+                        <div class="dye-gear"></div>
+                        <div class="dye-gear-slot">
+                            <div class="dye-gear-popup">
+                                <chrome-picker v-model="dyeSlots.handDye"
+                                    @input="dyeSlot('handDye', $event.hexT)" />
+                            </div>
+                        </div>
+                    </template>
+                    <div class="equipped-gear"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.hand, 'hand') + ')'}"></div>
+                    <div class="equipped-slot-gear" @click="unequip('hand')">
+                        <div class="tooltip-gear"
+                            v-if="unidata.items[ws_unicast.hand] && unidata.items[ws_unicast.hand].name">
+                            <div> {{unidata.items[ws_unicast.hand].name}} </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footprint & Feet -->
+                <div class="container-b">
+                    <div class="equipped-costume"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.styleFootprint, 'styleFootprint') + ')'}">
+                    </div>
+                    <div class="equipped-slot" @click="unequip('styleFootprint')">
+                        <div class="tooltip-costume"
+                            v-if="unidata.items[ws_unicast.styleFootprint] && unidata.items[ws_unicast.styleFootprint].name">
+                            <div> {{unidata.items[ws_unicast.styleFootprint].name}} </div>
+                        </div>
+                    </div>
+                    <template v-if="unidata.items[ws_unicast.feet] && unidata.items[ws_unicast.feet].dyeable">
+                        <div class="dye-gear"></div>
+                        <div class="dye-gear-slot">
+                            <div class="dye-gear-popup">
+                                <chrome-picker v-model="dyeSlots.feetDye"
+                                    @input="dyeSlot('feetDye', $event.hexT)" />
+                            </div>
+                        </div>
+                    </template>
+                    <div class="equipped-gear"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.feet, 'feet') + ')'}"></div>
+                    <div class="equipped-slot-gear" @click="unequip('feet')">
+                        <div class="tooltip-gear"
+                            v-if="unidata.items[ws_unicast.feet] && unidata.items[ws_unicast.feet].name">
+                            <div> {{unidata.items[ws_unicast.feet].name}} </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Ground Mount & Underwear-->
+                <div class="container-b">
+                    <div class="equipped-gear"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.underwear, 'underwear') + ')'}"></div>
+                    <div class="equipped-slot-gear" @click="unequip('underwear')">
+                        <div class="tooltip-gear"
+                            v-if="unidata.items[ws_unicast.underwear] && unidata.items[ws_unicast.underwear].name">
+                            <div> {{unidata.items[ws_unicast.underwear].name}} </div>
+                        </div>
+                    </div>
+                    <template v-if="unidata.items[ws_unicast.underwear] && unidata.items[ws_unicast.underwear].dyeable">
+                        <div class="dye-gear"></div>
+                        <div class="dye-gear-slot">
+                            <div class="dye-gear-popup">
+                                <chrome-picker v-model="dyeSlots.underwearDye"
+                                    @input="dyeSlot('underwearDye', $event.hexT)" />
+
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="equipped-costume"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.uniMountG, 'uniMount') + ')'}"></div>
+                    <div class="equipped-slot" @click="equipMount(ws_unicast.uniMountG)">
+                        <div class="tooltip-costume"
+                            v-if="unidata.mounts[ws_unicast.uniMountG] && unidata.mounts[ws_unicast.uniMountG].name">
+                            <div> {{unidata.mounts[ws_unicast.uniMountG].name}} </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flying Mount -->
+                <div class="container-b">
+                    <div class="equipped-costume"
+                        :style="{'background-image': 'url(' + iconUrl(ws_unicast.uniMountF, 'uniMount') + ')'}"></div>
+                    <div class="equipped-slot" @click="equipMount(ws_unicast.uniMountF)">
+                        <div class="tooltip-costume"
+                            v-if="unidata.mounts[ws_unicast.uniMountF] && unidata.mounts[ws_unicast.uniMountF].name">
+                            <div> {{unidata.mounts[ws_unicast.uniMountF].name}} </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nametag -->
+                <form>
+                    <div class="filter nametag">
+                        <input v-model="nametag" placeholder='Nametag'>
+                    </div>
+                </form>
+                <div class="separator"
+                    v-if="ws_unicast.styleBody == 0 || (ws_unicast.styleBody > 0 && unidata.items[ws_unicast.styleBody] && !unidata.items[ws_unicast.styleBody].nameable)">
+                </div>
+                <!-- Weapon glow -->
+                <div class="container-a">
+                    <div class="slider-container">
+                        <p>Weapon Glow</p>
+                        <input type="range" class="app-slider" :value="ws_unicast.weaponEnchant"
+                            @input="updateKey('weaponEnchant', Number($event.target.value))" min="0" max="28">
+                        <input type="number" min="0" max="28"
+                            @input="updateKey('weaponEnchant', Number($event.target.value))"
+                            v-model="ws_unicast.weaponEnchant">
+                    </div>
+
+                    <div class="slider-container">
+                        <p>Pet Size</p>
+                        <input type="range" class="app-slider" v-model.lazy="ws_unicast.uniPetSize || 1"
+                            @input.lazy="updateKey('uniPetSize', Number($event.target.value))" step="0.1" min="0.1"
+                            max="3.0">
+                        <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="0.1" max="3.0"
+                            @input="updateKey('uniPetSize', Number($event.target.value))"
+                            v-model.lazy="ws_unicast.uniPetSize || 1">
+                    </div>
+                    <div class=" buttons">
+                        <a class="smooth btn" @click="ResetAll()">Reset All</a>
+                        <a class="smooth btn" @click="ResetDye()">Reset Dye</a>
+                        <a class="smooth btn" @click="ResetPet()">Reset Pet</a>
+                        <br>
+                        <a class="smooth btn" @click="RemoveAllFx()">Remove changers and effects</a>
+                    </div>
+                </div>
+            </div>
+            <!--
+					<div class="equippedItems">
+						<img class="icon" :src="iconUrl(unicast.styleHead, 'styleHead')" @click="equip(unicast.styleHead)">
+						<div class="dyePopup" v-if="unidata.items[unicast.styleHead] && unidata.items[unicast.styleHead].dyeable">
+							<img width="32px" height="32px" src="http://unicast.feedia.co/images/Icon_Items/dye_result_random_tex.png" @click="dyepopup = !dyepopup">
+							<div class="popuptext" :class="{show: dyepopup}">
+								<chrome-picker v-model="unicast.styleHeadDye" />
+							</div>
+						</div>
+	
+						<img class="icon" :src="iconUrl(unicast.styleFace, 'styleFace')" @click="equip(unicast.styleFace)">
+						<div class="dyePopup" v-if="unidata.items[unicast.styleFace] && unidata.items[unicast.styleFace].dyeable">
+							<img width="32px" height="32px" src="http://unicast.feedia.co/images/Icon_Items/dye_result_random_tex.png" @click="dyepopup = !dyepopup">
+							<div class="popuptext" :class="{show: dyepopup}">
+								<chrome-picker v-model="unicast.styleFaceDye" />
+							</div>
+						</div>
+	
+						<img class="icon" :src="iconUrl(unicast.styleBody, 'styleBody')" @click="equip(unicast.styleBody)">
+						<div class="dyePopup" v-if="unidata.items[unicast.styleBody] && unidata.items[unicast.styleBody].dyeable">
+							<img width="32px" height="32px" src="http://unicast.feedia.co/images/Icon_Items/dye_result_random_tex.png" @click="dyepopup = !dyepopup">
+							<div class="popuptext" :class="{show: dyepopup}">
+								<chrome-picker v-model="unicast.styleBodyDye" />
+							</div>
+						</div>
+	
+						<img class="icon" :src="iconUrl(unicast.styleWeapon, 'styleWeapon')" @click="equip(unicast.styleWeapon)">
+						<div class="dyePopup" v-if="unidata.items[unicast.styleWeapon] && unidata.items[unicast.styleWeapon].dyeable">
+							<img width="32px" height="32px" src="http://unicast.feedia.co/images/Icon_Items/dye_result_random_tex.png" @click="dyepopup = !dyepopup">
+							<div class="popuptext" :class="{show: dyepopup}">
+								<chrome-picker v-model="unicast.weaponDye" />
+							</div>
+						</div>
+	
+						<img class="icon" :src="iconUrl(unicast.styleBack, 'styleBack')" @click="equip(unicast.styleBack)">
+						<div class="dyePopup" v-if="unidata.items[unicast.styleBack] && unidata.items[unicast.styleBack].dyeable">
+							<img width="32px" height="32px" src="http://unicast.feedia.co/images/Icon_Items/dye_result_random_tex.png" @click="dyepopup = !dyepopup">
+							<div class="popuptext" :class="{show: dyepopup}">
+								<chrome-picker v-model="unicast.styleBackDye" />
+							</div>
+						</div>
+	
+						<img class="icon" :src="iconUrl(unicast.styleFootprint, 'styleFootprint')" @click="equip(unicast.styleFootprint)">
+					</div>
+					-->
+        </div>
+
+        <!-- Edits -->
+        <div class="container" v-if="activeTab === 2">
+
+            <div v-if="activeSubTab === 0">
+                <div>
+                    <div class="container-a">
+                        <h3>Hair Styles</h3>
+                        <div class="icon" v-for="(item, index) in faces_decals[race][gender]['hairs']">
+                            <img class="smooth" :class="{active: ws_unicast.appearance.hairStyle == index}"
+                                :src="'https://static.teragame.su/unicast-data/icons/' + faces_decals[race][gender]['hairs'][index] + '.png'"
+                                @click="updateSubKey('appearance', 'hairStyle', Number(index))">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="container-a">
+                        <h3>Faces</h3>
+                        <div class="icon" v-for="(item, index) in faces_decals[race][gender]">
+                            <img class="smooth" :class="{active: ws_unicast.appearance.faceStyle == index}"
+                                :src="'https://static.teragame.su/unicast-data/icons/' + faces_decals[race][gender][index].icon + '.png'"
+                                @click="updateSubKey('appearance', 'faceStyle', index)" v-if="index !== 'hairs'">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+
+                    <div class="container-a">
+                        <h3>Adornments</h3>
+                        <div class="icon"
+                            v-for="(item, index) in faces_decals[race][gender][ws_unicast.appearance.faceStyle].decals">
+                            <img class="smooth" :class="{active: ws_unicast.appearance.faceDecal == index}"
+                                :src="'https://static.teragame.su/unicast-data/icons/' + faces_decals[race][gender][ws_unicast.appearance.faceStyle]['decals'][index] + '.png'"
+                                @click="updateSubKey('appearance', 'faceDecal', index)">
+                        </div>
+                    </div>
+                    <div class="container-a"
+                        v-if="typeof faces_decals[race][gender][ws_unicast.appearance.faceStyle].decos !== 'undefined'">
+                        <h3>Decos</h3>
+                        <div class="icon"
+                            v-for="(item, index) in faces_decals[race][gender][ws_unicast.appearance.faceStyle].decos">
+
+                            <img class="smooth" :class="{active: ws_unicast.appearance.tattoos == index}"
+                                :src="'https://static.teragame.su/unicast-data/icons/' + faces_decals[race][gender][ws_unicast.appearance.faceStyle]['decos'][index] + '.png'"
+                                @click="updateSubKey('appearance', 'tattoos', index)">
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-container">
+                    <p>Skin Color</p>
+                    <input type="range" class="app-slider" :value="ws_unicast.appearance.skinColor"
+                        @input="updateSubKey('appearance', 'skinColor', Number($event.target.value))" min="0" max="32">
+                    <input class="app-input" type="number" :value="ws_unicast.appearance.skinColor"
+                        @input="updateSubKey('appearance', 'skinColor', Number($event.target.value))" min="0" max="32">
+                </div>
+                <div class="slider-container">
+                    <p>Hair Color</p>
+                    <input type="range" class="app-slider" :value="ws_unicast.appearance.hairColor"
+                        @input="updateSubKey('appearance', 'hairColor', Number($event.target.value))" min="0" max="255">
+                    <input class="app-input" type="number" :value="ws_unicast.appearance.hairColor"
+                        @input="updateSubKey('appearance', 'hairColor', Number($event.target.value))" min="0" max="255">
+                </div>
+                <div class="slider-container">
+                    <p>Voice</p>
+                    <input type="range" class="app-slider" :value="ws_unicast.appearance.voice"
+                        @input="updateSubKey('appearance', 'voice', Number($event.target.value))" min="1"
+                        :max="gender === 0 ? 5 : 4">
+                    <input class="app-input" type="number" :value="ws_unicast.appearance.voice"
+                        @input="updateSubKey('appearance', 'voice', Number($event.target.value))" min="1"
+                        :max="gender === 0 ? 5 : 4">
+                </div>
+                <div class="container-a buttons">
+                    <a class="smooth btn" @click="RandomFace()">Random</a>
+                    <a class="smooth btn" @click="ResetFace()">Reset</a>
+                </div>
+            </div>
+            <!-- Body -->
+            <div v-if="activeSubTab === 1">
+
+                <div class="body-bar">
+                    <div class="smooth dropdown">
+                        <span class="smooth dropbtn">Race</span>
+                        <div class="smooth dropdown-content">
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,'human', current_template.class)"
+                                v-if="['13', '12', '10', '09'].indexOf(job) === -1">Human</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,'highelf', current_template.class)"
+                                v-if="['13', '12', '11', '09'].indexOf(job) === -1">High
+                                Elf</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,'aman', current_template.class)"
+                                v-if="['13', '12', '11', '10', '09'].indexOf(job) === -1">Aman</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,'castanic', current_template.class)"
+                                v-if="['12', '11', '09'].indexOf(job) === -1">Castanic</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate('female','popori', current_template.class)">Elin</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate('male','popori', current_template.class)"
+                                v-if="['13','12','10','09'].indexOf(job) === -1">Popori</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate('male','baraka', current_template.class)"
+                                v-if="['13','12','11','10','09'].indexOf(job) === -1">Baraka</a>
+                        </div>
+                    </div>
+                    <div class="smooth dropdown">
+                        <span class="smooth dropbtn">Idle</span>
+                        <div class="dropdown-content" v-if="race === 4 || race === 0">
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,current_template.race, job == 11 ? getNormalIdle(job) : original_template.class)"
+                                v-if="(race === 4 && gender != 1) ||[0,1].indexOf(race) > -1">Normal</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,current_template.race, 'fighter')"
+                                v-if="(race === 4 && gender != 1) || [0,1].indexOf(race) > -1">Brawler</a>
+
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,current_template.race, ['9', '11', '12'].indexOf(job) > -1 ? getNormalIdle(job) : original_template.class)"
+                                v-if="race === 4 && gender === 1">Normal</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,current_template.race, 'assassin')"
+                                v-if="race === 4 && gender === 1">Ninja</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,current_template.race, 'soulless')"
+                                v-if="race === 4 && gender === 1">Reaper</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,current_template.race, 'glaiver')"
+                                v-if="race === 4 && gender === 1">Valkyrie</a>
+                            <a class="smooth dropdown-item"
+                                @click="GetTemplate(current_template.gender,current_template.race, 'fighter')"
+                                v-if="race === 4 && gender === 1">Brawler</a>
+                        </div>
+                    </div>
+                    <div class="smooth dropdown">
+                        <span class="smooth dropbtn" @click="RandomBody()">Random</span>
+
+                        <span class="smooth dropbtn" @click="ResetBody()">Reset</span>
+                    </div>
+                </div>
+
+                <div class="gender" v-if="[4,5].indexOf(race) === -1 && ['13', '10'].indexOf(job) === -1">
+                    <label for="male" class="genderlabel">Male
+                        <input type="radio" id="male" value="male" :checked="genderString == 'male'"
+                            @click.stop="GetTemplate('male',current_template.race, current_template.class)">
+                        <span class="checkmark"></span>
+                    </label>
+
+                    <label for="female" class="genderlabel">Female
+                        <input type="radio" id="female" value="female" :checked="genderString == 'female'"
+                            @click.stop="GetTemplate('female',current_template.race, current_template.class)">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+
+                <div class="slider-container" v-for="(val, index) in shape[gender]" :key="slidersKey">
+                    <p class="shape">{{val}}</p>
+                    <input type="range" class="app-slider" v-model='ws_unicast.shape[index]'
+                        @input="updateSlider('shape', index, Number($event.target.value))" min="1" max="32">
+                    <input class="app-input" type="number" v-model='ws_unicast.shape[index]' min="0" max="31"
+                        @input="updateSlider('shape', index, Number($event.target.value))">
+                </div>
+            </div>
+            <!-- Details -->
+            <div v-if="activeSubTab === 2">
+
+                <h2 class="slider-header">Bone Structure</h2>
+                <div class="slider-container" v-for="index in [0,1,2,30,3]" class="details" :key="slidersKeyDD">
+                    <p>{{details[index]}}</p>
+                    <input type="range" class="app-slider" v-model='ws_unicast.details[index]'
+                        @input="updateSlider('details', index, Number($event.target.value))" min="1" max="32">
+                    <input class="app-input" type="number" v-model='ws_unicast.details[index]'
+                        @input="updateSlider('details', index, Number($event.target.value))" min="1" max="32">
+                </div>
+
+                <h2 class="slider-header">Eyes</h2>
+                <div class="slider-container" v-for="index in [8,28,9,10,12,13,14]" class="details" :key="slidersD[1]">
+                    <p>{{details[index]}}</p>
+                    <input type="range" class="app-slider" v-model='ws_unicast.details[index]'
+                        @input="updateSlider('details', index, Number($event.target.value))" min="1" max="32">
+                    <input class="app-input" type="number" v-model='ws_unicast.details[index]'
+                        @input="updateSlider('details', index, Number($event.target.value))" min="1" max="32">
+                </div>
+
+                <h2 class="slider-header">Nose</h2>
+                <div class="slider-container" v-for="index in [16,17,18,19,20,21,22,29]" class="details"
+                    :key="slidersD[2]">
+                    <p>{{details[index]}}</p>
+                    <input type="range" class="app-slider" v-model='ws_unicast.details[index]'
+                        @input="updateSlider('details', index, Number($event.target.value))" min="1" max="32">
+                    <input class="app-input" type="number" v-model='ws_unicast.details[index]'
+                        @input="updateSlider('details', index, Number($event.target.value))" min="1" max="32">
+                </div>
+
+                <h2 class="slider-header">Mouth</h2>
+                <div class="slider-container" v-for="index in [24,25,26,31,23,27]" class="details" :key="slidersD[3]">
+                    <p>{{details[index]}}</p>
+                    <input type="range" class="app-slider" v-model='ws_unicast.details[index]'
+                        @input="updateSlider('details', index, Number($event.target.value))" min="1" max="32">
+                    <input class="app-input" type="number" v-model='ws_unicast.details[index]'
+                        @input="updateSlider('details', index, Number($event.target.value))" min="1" max="32">
+                </div>
+
+                <div class="slider-container" v-if="[4,5,9,10].indexOf(thing) === -1" class="details"
+                    :key="slidersD[4]">
+                    <h2 class="slider-header">Ears</h2>
+                    <div v-for="index in [4,5,6,7]">
+                        <p>{{details[index]}}</p>
+                        <input type="range" class="app-slider" v-model='ws_unicast.details[index]'
+                            @input="updateSlider('details', index, Number($event.target.value))" min="1" max="32">
+                        <input class="app-input" type="number" v-model='ws_unicast.details[index]'
+                            @input="updateSlider('details', index, Number($event.target.value))" min="1" max="32">
+                    </div>
+                </div>
+
+                <div class="container-a buttons">
+                    <a class="smooth btn" @click="RandomDetails()">Random</a>
+                    <a class="smooth btn" @click="ResetDetails()">Reset</a>
+                </div class="buttons">
+            </div>
+            <!-- Effects -->
+            <div v-if="activeSubTab === 3">
+                <paginate tag="div" ref="paginator" name="abnormals" :list="arrayAbnormals" :per="9"
+                    v-if="arrayAbnormals.length > 0">
+                    <div class="content" v-for="(item, key) in paginated('abnormals')" :key="item.id">
+                        <div class="icon">
+                            <img class="smooth"
+                                :class="{active: equippedAbnormals.indexOf(item.id) > -1 || ws_unicast.uniAbn.indexOf(item.id) > -1}"
+                                :src="'https://static.teragame.su/unicast-data/icons/' + item.icon + '.png'"
+                                @click="abnormal(item.id, item.type)">
+                        </div>
+                        <div class="entry">
+                            <span>{{item.name}}</span>
+                            <input type="number" min="-10" max="10" v-if="equippedAbnormals.indexOf(item.id) > -1"
+                                v-model="ws_unicast.abnormals[equippedAbnormals.indexOf(item.id)].stacks"
+                                @input="ChangerStacks(item.id, Number($event.target.value))">
+                        </div>
+                    </div>
+                </paginate>
+                <div class="footer" align="center" v-if="$refs.paginator">
+                    <div class="container">
+                        <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                        <a class="smooth pagination">{{$refs.paginator.currentPage +
+                            1}}/{{$refs.paginator.lastPage}}</a>
+
+                        <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                        <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                        <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aeros -->
+            <div v-if="activeSubTab === 4">
+                <paginate tag="div" ref="paginator" name="aeros" :list="aerolist" :per="15" v-if="aerolist.length > 0">
+                    <div class="content list" v-for="(aero, idx) in paginated('aeros')"
+                        @click="equipAero(aerolist.indexOf(aero))">
+                        <i class="smooth fa fa-star bookmark-icon"
+                            :class="{bookmarked: bookmarks['skies'].indexOf(aerolist.indexOf(aero)) > -1}"
+                            @click.stop="bookmark(aerolist.indexOf(aero), 'skies')"></i>
+                        <div class="smooth list-icon"
+                            :class="{activelist: ws_unicast.aeroSky && ws_unicast.aeroSky === aerolist.indexOf(aero)}">
+                        </div>
+                        <span class="list-text">{{aero}}</span>
+                    </div>
+                </paginate>
+                <div class="footer" align="center" v-if="$refs.paginator">
+                    <div class="container">
+                        <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                        <a class="smooth pagination">{{$refs.paginator.currentPage +
+                            1}}/{{$refs.paginator.lastPage}}</a>
+
+                        <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                        <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                        <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Catalogue -->
+        <div class="container" v-if="activeTab === 3">
+
+
+            <!-- Costume -->
+            <div v-if="activeSubTab === 0">
+                <form>
+                    <div class="filter">
+                        <input class="smooth" v-model='filterKey' placeholder='Search for ...'><i
+                            class="smooth addon fa fa-sort-alpha-asc" :class="{'selected-sort': sort == 1}"
+                            @click="sort = 1"></i>
+                        <i class="smooth addon fa fa-sort-alpha-desc" :class="{'selected-sort': sort == -1}"
+                            @click="sort = -1"></i>
+                    </div>
+                </form>
+
+                <paginate tag="div" ref="paginator" name="costume" :list="filteredCostumes" :per="9"
+                    v-if="filteredCostumes.length > 0">
+
+                    <div class="content" v-for="item in paginated('costume')" :key="item.id">
+                        <div class="icon">
+                            <img class="smooth"
+                                :class="{active: item.id === 0 ? ws_unicast['styleWeapon'] === 0 && ws_unicast['weapon'] === 0 : equipped.indexOf(item.id) > -1}"
+                                :src="'https://static.teragame.su/unicast-data/icons/' + item.icon + '.png'" @click="equip(item.id)">
+                        </div>
+                        <div class="entry">
+                            <i class="smooth fa fa-star bookmark-icon"
+                                :class="{bookmarked: bookmarks['items'].indexOf(item.id) > -1}"
+                                @click="bookmark(item.id, 'items')"></i>
+                            <span>{{item.name}}</span>
+                        </div>
+                    </div>
+
+
+                </paginate>
+                <div class="footer" align="center" v-if="$refs.paginator">
+                    <div class="container">
+                        <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                        <a class="smooth pagination">{{$refs.paginator.currentPage +
+                            1}}/{{$refs.paginator.lastPage}}</a>
+
+                        <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                        <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                        <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Gear -->
+            <div v-if="activeSubTab === 1">
+                <form>
+                    <div class="filter">
+                        <input class="smooth" v-model='filterKey' placeholder='Search for ...'><i
+                            class="smooth addon fa fa-sort-alpha-asc" :class="{'selected-sort': sort == 1}"
+                            @click="sort = 1"></i>
+                        <i class="smooth addon fa fa-sort-alpha-desc" :class="{'selected-sort': sort == -1}"
+                            @click="sort = -1"></i>
+                    </div>
+                </form>
+
+                <paginate tag="div" ref="paginator" name="gear" :list="filteredGear" :per="9"
+                    v-if="filteredGear.length > 0">
+
+                    <div class="content" v-for="item in paginated('gear')" :key="item.id">
+                        <div class="icon">
+                            <img class="smooth" :class="{active: equipped.indexOf(item.id) > -1}"
+                                :src="'https://static.teragame.su/unicast-data/icons/' + item.icon + '.png'" @click="equip(item.id)">
+                        </div>
+                        <div class="entry">
+                            <i class="smooth fa fa-star bookmark-icon"
+                                :class="{bookmarked: bookmarks['items'].indexOf(item.id) > -1}"
+                                @click="bookmark(item.id, 'items')"></i>
+                            <span>{{item.name}}</span>
+                        </div>
+                    </div>
+
+
+                </paginate>
+                <div class="footer" align="center" v-if="$refs.paginator">
+                    <div class="container">
+                        <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                        <a class="smooth pagination">{{$refs.paginator.currentPage +
+                            1}}/{{$refs.paginator.lastPage}}</a>
+
+                        <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                        <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                        <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Mounts -->
+            <div v-if="activeSubTab === 2">
+                <div v-if="itemCategory === 0">
+                    <form>
+                        <div class="filter">
+                            <input class="smooth" v-model='filterKey' placeholder='Search for ...'><i
+                                class="smooth addon fa fa-sort-alpha-asc" :class="{'selected-sort': sort == 1}"
+                                @click="sort = 1"></i>
+                            <i class="smooth addon fa fa-sort-alpha-desc" :class="{'selected-sort': sort == -1}"
+                                @click="sort = -1"></i>
+                        </div>
+                    </form>
+
+                    <paginate tag="div" ref="paginator" name="mounts" :list="filteredMounts" :per="9"
+                        v-if="filteredMounts.length > 0">
+
+                        <div class="content" v-for="item in paginated('mounts')" :key="item.id">
+                            <div class="icon">
+                                <img class="smooth" :class="{active: equipped.indexOf(item.id) > -1}"
+                                    :src="'https://static.teragame.su/unicast-data/icons/' + item.icon + '.png'"
+                                    @click="equipMount(item.id)">
+                            </div>
+                            <div class="entry">
+                                <i class="smooth fa fa-star bookmark-icon"
+                                    :class="{bookmarked: bookmarks['mounts'].indexOf(item.id) > -1}"
+                                    @click="bookmark(item.id, 'mounts')"></i>
+                                <span>{{item.name}}</span>
+                            </div>
+                        </div>
+
+
+                    </paginate>
+                    <div class="footer" align="center" v-if="$refs.paginator">
+                        <div class="container">
+                            <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                            <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                            <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                            <a class="smooth pagination">{{$refs.paginator.currentPage +
+                                1}}/{{$refs.paginator.lastPage}}</a>
+
+                            <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                            <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                            <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pets -->
+                <div v-if="itemCategory === 1">
+                    <form>
+                        <div class="filter">
+                            <input class="smooth" v-model='filterKey' placeholder='Search for ...'><i
+                                class="smooth addon fa fa-sort-alpha-asc" :class="{'selected-sort': sort == 1}"
+                                @click="sort = 1"></i>
+                            <i class="smooth addon fa fa-sort-alpha-desc" :class="{'selected-sort': sort == -1}"
+                                @click="sort = -1"></i>
+                        </div>
+                    </form>
+                    <paginate tag="div" ref="paginator" name="pets" :list="filteredPets" :per="12"
+                        v-if="filteredPets.length > 0">
+                        <div class="content list" v-for="pet in paginated('pets')" :key="pet.key"
+                            @click="usePet(pet.key)">
+                            <i class="smooth fa fa-star bookmark-icon"
+                                :class="{bookmarked: bookmarks['pets'].indexOf(pet.key) > -1}"
+                                @click.stop="bookmark(pet.key, 'pets')"></i>
+
+                            <div class="smooth list-icon" :class="{activelist: ws_unicast.uniPet === pet.key}"></div>
+                            <a class="list-text">{{pet.name}}</a>
+                        </div>
+                    </paginate>
+                    <div class="footer" align="center" v-if="$refs.paginator">
+                        <div class="container">
+                            <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                            <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                            <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                            <a class="smooth pagination">{{$refs.paginator.currentPage +
+                                1}}/{{$refs.paginator.lastPage}}</a>
+
+                            <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                            <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                            <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div v-if="activeSubTab === 3">
+                <form>
+                    <div class="filter">
+                        <input class="smooth" v-model='filterKey' placeholder='Search for ...'><i
+                            class="smooth addon fa fa-sort-alpha-asc" :class="{'selected-sort': sort == 1}"
+                            @click="sort = 1"></i>
+                        <i class="smooth addon fa fa-sort-alpha-desc" :class="{'selected-sort': sort == -1}"
+                            @click="sort = -1"></i>
+                    </div>
+                </form>
+
+                <paginate tag="div" ref="paginator" name="footsteps" :list="filteredFootsteps" :per="9"
+                    v-if="filteredFootsteps.length > 0">
+
+                    <div class="content" v-for="item in paginated('footsteps')" :key="item.id">
+                        <div class="icon">
+                            <img class="smooth" :class="{active: equipped.indexOf(item.id) > -1}"
+                                :src="'https://static.teragame.su/unicast-data/icons/' + item.icon + '.png'" @click="equip(item.id)">
+                        </div>
+                        <div class="entry">
+                            <i class="smooth fa fa-star bookmark-icon"
+                                :class="{bookmarked: bookmarks['items'].indexOf(item.id) > -1}"
+                                @click="bookmark(item.id, 'items')"></i>
+                            <span>{{item.name}}</span>
+                        </div>
+                    </div>
+
+
+                </paginate>
+                <div class="footer" align="center" v-if="$refs.paginator">
+                    <div class="container">
+                        <a class="smooth pagination" @click="goTo(-100)">&lt;&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-10)">&lt;&lt;</a>
+                        <a class="smooth pagination" @click="goTo(-1)">&lt;</a>
+
+                        <a class="smooth pagination">{{$refs.paginator.currentPage +
+                            1}}/{{$refs.paginator.lastPage}}</a>
+
+                        <a class="smooth pagination" @click="goTo(1)">&gt;</a>
+                        <a class="smooth pagination" @click="goTo(10)">&gt;&gt;</a>
+                        <a class="smooth pagination" @click="goTo(100)">&gt;&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Restyle -->
+        <div class="container" v-if="activeTab === 4">
+            <h2>Restyle</h2>
+            <!--Head-->
+            <h2 class="slider-header">Head Accesory <i class="smooth btn fa fa-repeat"
+                    @click="resetStyle('styleHead')"></i></h2>
+            <div class="slider-container">
+                <p>Scale</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleHeadScale"
+                    @input.lazy="updateKey('styleHeadScale', Number($event.target.value))" step="0.1" min="0.1"
+                    max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="0.1" max="3.0"
+                    @input="updateKey('styleHeadScale', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleHeadScale">
+            </div>
+            <div class="slider-container">
+                <p>Rotation x</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleHeadRotation.x"
+                    @input.lazy="updateSubKey('styleHeadRotation', 'x', Number($event.target.value))" step="0.1"
+                    min="-3" max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="-3" max="3.0"
+                    @input="updateSubKey('styleHeadRotation', 'x', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleHeadRotation.x">
+            </div>
+            <div class="slider-container">
+                <p>Rotation y</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleHeadRotation.y"
+                    @input.lazy="updateSubKey('styleHeadRotation', 'y', Number($event.target.value))" step="0.1"
+                    min="-3" max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="-3" max="3.0"
+                    @input="updateSubKey('styleHeadRotation', 'y', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleHeadRotation.y">
+            </div>
+            <div class="slider-container">
+                <p>Rotation z</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleHeadRotation.z"
+                    @input.lazy="updateSubKey('styleHeadRotation', 'z', Number($event.target.value))" step="0.1"
+                    min="-3" max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="-3" max="3.0"
+                    @input="updateSubKey('styleHeadRotation', 'z', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleHeadRotation.z">
+            </div>
+            <div class="slider-container">
+                <p>Translation x</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleHeadTranslation.x"
+                    @input.lazy="updateSubKey('styleHeadTranslation', 'x', Number($event.target.value))" min="-15"
+                    max="15">
+                <input style="max-width: 60px;width: 60px;" type="number" min="-15" max="15"
+                    @input="updateSubKey('styleHeadTranslation', 'x', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleHeadTranslation.x">
+            </div>
+            <div class="slider-container">
+                <p>Translation y</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleHeadTranslation.y"
+                    @input.lazy="updateSubKey('styleHeadTranslation', 'y', Number($event.target.value))" min="-15"
+                    max="15">
+                <input style="max-width: 60px;width: 60px;" type="number" min="-15" max="15"
+                    @input="updateSubKey('styleHeadTranslation', 'y', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleHeadTranslation.y">
+            </div>
+            <div class="slider-container">
+                <p>Translation z</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleHeadTranslation.z"
+                    @input.lazy="updateSubKey('styleHeadTranslation', 'z', Number($event.target.value))" min="-15"
+                    max="15">
+                <input style="max-width: 60px;width: 60px;" type="number" min="-15" max="15"
+                    @input="updateSubKey('styleHeadTranslation', 'z', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleHeadTranslation.z">
+            </div>
+
+            <!--Face-->
+            <h2 class="slider-header">Face Accesory <i class="smooth btn fa fa-repeat"
+                    @click="resetStyle('styleFace')"></i></h2>
+            <div class="slider-container">
+                <p>Scale</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleFaceScale"
+                    @input.lazy="updateKey('styleFaceScale', Number($event.target.value))" step="0.1" min="0.1"
+                    max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="0.1" max="3.0"
+                    @input="updateKey('styleFaceScale', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleFaceScale">
+            </div>
+            <div class="slider-container">
+                <p>Rotation x</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleFaceRotation.x"
+                    @input.lazy="updateSubKey('styleFaceRotation', 'x', Number($event.target.value))" step="0.1"
+                    min="-3" max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="-3" max="3.0"
+                    @input="updateSubKey('styleFaceRotation', 'x', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleFaceRotation.x">
+            </div>
+            <div class="slider-container">
+                <p>Rotation y</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleFaceRotation.y"
+                    @input.lazy="updateSubKey('styleFaceRotation', 'y', Number($event.target.value))" step="0.1"
+                    min="-3" max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="-3" max="3.0"
+                    @input="updateSubKey('styleFaceRotation', 'y', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleFaceRotation.y">
+            </div>
+            <div class="slider-container">
+                <p>Rotation z</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleFaceRotation.z"
+                    @input.lazy="updateSubKey('styleFaceRotation', 'z', Number($event.target.value))" step="0.1"
+                    min="-3" max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="-3" max="3.0"
+                    @input="updateSubKey('styleFaceRotation', 'z', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleFaceRotation.z">
+            </div>
+            <div class="slider-container">
+                <p>Translation x</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleFaceTranslation.x"
+                    @input.lazy="updateSubKey('styleFaceTranslation', 'x', Number($event.target.value))" min="-15"
+                    max="15">
+                <input style="max-width: 60px;width: 60px;" type="number" min="-15" max="15"
+                    @input="updateSubKey('styleFaceTranslation', 'x', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleFaceTranslation.x">
+            </div>
+            <div class="slider-container">
+                <p>Translation y</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleFaceTranslation.y"
+                    @input.lazy="updateSubKey('styleFaceTranslation', 'y', Number($event.target.value))" min="-15"
+                    max="15">
+                <input style="max-width: 60px;width: 60px;" type="number" min="-15" max="15"
+                    @input="updateSubKey('styleFaceTranslation', 'y', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleFaceTranslation.y">
+            </div>
+            <div class="slider-container">
+                <p>Translation z</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleFaceTranslation.z"
+                    @input.lazy="updateSubKey('styleFaceTranslation', 'z', Number($event.target.value))" min="-15"
+                    max="15">
+                <input style="max-width: 60px;width: 60px;" type="number" min="-15" max="15"
+                    @input="updateSubKey('styleFaceTranslation', 'z', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleFaceTranslation.z">
+            </div>
+
+            <!--Back-->
+            <h2 class="slider-header">Back Accesory <i class="smooth btn fa fa-repeat"
+                    @click="resetStyle('styleBack')"></i></h2>
+            <div class="slider-container">
+                <p>Scale</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleBackScale"
+                    @input.lazy="updateKey('styleBackScale', Number($event.target.value))" step="0.1" min="0.1"
+                    max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="0.1" max="3.0"
+                    @input="updateKey('styleBackScale', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleBackScale">
+            </div>
+            <div class="slider-container">
+                <p>Rotation x</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleBackRotation.x"
+                    @input.lazy="updateSubKey('styleBackRotation', 'x', Number($event.target.value))" step="0.1"
+                    min="-3" max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="-3" max="3.0"
+                    @input="updateSubKey('styleBackRotation', 'x', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleBackRotation.x">
+            </div>
+            <div class="slider-container">
+                <p>Rotation y</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleBackRotation.y"
+                    @input.lazy="updateSubKey('styleBackRotation', 'y', Number($event.target.value))" step="0.1"
+                    min="-3" max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="-3" max="3.0"
+                    @input="updateSubKey('styleBackRotation', 'y', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleBackRotation.y">
+            </div>
+            <div class="slider-container">
+                <p>Rotation z</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleBackRotation.z"
+                    @input.lazy="updateSubKey('styleBackRotation', 'z', Number($event.target.value))" step="0.1"
+                    min="-3" max="3.0">
+                <input style="max-width: 60px;width: 60px;" type="number" step="0.1" min="-3" max="3.0"
+                    @input="updateSubKey('styleBackRotation', 'z', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleBackRotation.z">
+            </div>
+            <div class="slider-container">
+                <p>Translation x</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleBackTranslation.x"
+                    @input.lazy="updateSubKey('styleBackTranslation', 'x', Number($event.target.value))" min="-15"
+                    max="15">
+                <input style="max-width: 60px;width: 60px;" type="number" min="-15" max="15"
+                    @input="updateSubKey('styleBackTranslation', 'x', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleBackTranslation.x">
+            </div>
+            <div class="slider-container">
+                <p>Translation y</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleBackTranslation.y"
+                    @input.lazy="updateSubKey('styleBackTranslation', 'y', Number($event.target.value))" min="-15"
+                    max="15">
+                <input style="max-width: 60px;width: 60px;" type="number" min="-15" max="15"
+                    @input="updateSubKey('styleBackTranslation', 'y', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleBackTranslation.y">
+            </div>
+            <div class="slider-container">
+                <p>Translation z</p>
+                <input type="range" class="app-slider" v-model.lazy="ws_unicast.styleBackTranslation.z"
+                    @input.lazy="updateSubKey('styleBackTranslation', 'z', Number($event.target.value))" min="-15"
+                    max="15">
+                <input style="max-width: 60px;width: 60px;" type="number" min="-15" max="15"
+                    @input="updateSubKey('styleBackTranslation', 'z', Number($event.target.value))"
+                    v-model.lazy="ws_unicast.styleBackTranslation.z">
+            </div>
+        </div>
+        <!-- Config -->
+        <div v-if="activeTab === 7">
+            <div class='container'>
+                <div class="container-a config">
+                    <div class="smooth dropdown dropconfig theme-bar">
+                        <span class="smooth dropbtn dropconfig">Themes</span>
+                        <div class="smooth dropdown-content dropconfig-content">
+                            <a class="smooth dropdown-item" v-for="theme in themes"
+                                @click="config.theme = theme">{{theme}}</a>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <h2>Unicast</h2>
+                        <label class="switch config-label" for="online">
+                            <input type="checkbox" id="online" v-model="config.online">
+                            <span class="smooth switch-slider"></span>
+                        </label>
+                        <span class="config-label">Online Mode</span><br>
+
+                        <label class="switch config-label" for="ignorerestyle">
+                            <input type="checkbox" id="ignorerestyle" v-model="config.ignoreRestyle">
+                            <span class="smooth switch-slider"></span>
+                        </label>
+                        <span class="config-label">Ignore other user's accessory restylers</span><br>
+
+                        <label class="switch config-label" for="ignorechangers">
+                            <input type="checkbox" id="ignorechangers" v-model="config.ignoreChangers">
+                            <span class="smooth switch-slider"></span>
+                        </label>
+                        <span class="config-label">Ignore other user's changers</span><br>
+
+                        <label class="switch config-label" for="ignorefx">
+                            <input type="checkbox" id="ignorefx" v-model="config.ignoreAbnormals">
+                            <span class="smooth switch-slider"></span>
+                        </label>
+                        <span class="config-label">Ignore other user's effects</span><br>
+
+                        <label class="switch config-label" for="ignorepets">
+                            <input type="checkbox" id="ignorepets" v-model="config.ignorePets">
+                            <span class="smooth switch-slider"></span>
+                        </label>
+                        <span class="config-label">Ignore other user's pets</span><br>
+
+                        <span class="config-label">Limit min body shape changer value to:</span>
+                        <input class="smooth" type="textbox" v-model='config.minChangerValue'><br>
+                        <span class="config-label">Limit max body shape changer value to:</span>
+                        <input class="smooth" type="textbox" v-model='config.maxChangerValue'><br>
+
+                        <div class="slider-container">
+                            <p>Window Height: {{config.browserHeight ? config.browserHeight : ''}}px</p>
+                            <input type="range" class="app-slider config-slider" v-model="config.browserHeight"
+                                @input="_tera_client_proxy_.resize_to(440, Number($event.target.value))" min="360"
+                                max="1080">
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2>Camera</h2>
+
+                        <div class="slider-container">
+                            <span>Camera distance</span> <a class="smooth btn" @click="ResetCamera">Reset</a>
+                            <input type="range" class="app-slider" v-model='config.camera' min="0" max="3000">
+                            <input class="app-input" type="number" v-model='config.camera' min="0" max="30000">
+                        </div>
+
+                        <div class="slider-container">
+                            <span>Camera fov</span> <a class="smooth btn" @click="ResetFov">Reset</a>
+                            <input type="range" class="app-slider" v-model='config.fov' min="0" max="360">
+                            <input class="app-input" type="number" v-model='config.fov' min="0" max="360">
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2>Fps</h2>
+
+                        <label class="switch config-label" for="hidemarrow">
+                            <input type="checkbox" id="hidemarrow" v-model="config.ignoreMarrow">
+                            <span class="smooth switch-slider"></span>
+                        </label>
+                        <span class="config-label">Ignore brooch transformations</span><br>
+
+                        <label class="switch config-label" for="hidemotes">
+                            <input type="checkbox" id="hidemotes" v-model="config.hideMotes">
+                            <span class="smooth switch-slider"></span>
+                        </label>
+                        <span class="config-label">Hide all motes</span><br>
+
+                        <label class="switch config-label" for="petnames">
+                            <input type="checkbox" id="petnames" v-model="config.hidePetNames">
+                            <span class="smooth switch-slider"></span>
+                        </label>
+                        <span class="config-label">Hide all pets names</span><br>
+
+                        <label class="switch config-label" for="mutepets">
+                            <input type="checkbox" id="mutepets" v-model="config.mutePets">
+                            <span class="smooth switch-slider"></span>
+                        </label>
+                        <span class="config-label">Hide all pets speech</span><br>
+
+                        <label class="switch config-label" for="blockidles">
+                            <input type="checkbox" id="blockidles" v-model="config.blockIdles">
+                            <span class="smooth switch-slider"></span>
+                        </label>
+                        <span class="config-label">Block character idle animation</span><br>
+                    </div>
+
+                    <div class="section">
+                        <span>Using data folder: {{uDataFolder}}</span>
+                    </div>
+
+                    <!--
+					<input type="checkbox" id="ignorerainbow" v-model="config.ignoreRainbow">
+					<label for="ignorerainbow">WIP</label><br>
+					-->
+                </div>
+            </div>
+        </div>
+        <!-- FAQ -->
+        <div v-if="activeTab === 5">
+            <div class="container">
+                <h2>Why isn't it working ?</h2>
+                <p>Make sure you're properly connected to the internet and using the most current version of TERA
+                    Toolbox</p>
+                <p>Did you try "u reset" command and the issue persists ? Did you check for conflicting mods ?</p>
+                <p>If the issue persists, try posting in #help</p>
+
+
+                <h2>Why can't I open the in-game UI ?</h2>
+                <p>
+                    If you can't open the cash shop store in-game, it's an issue with a lost or deleted file (Awesomium
+                    in
+                    "client/Binaries") Try a repair tool to get it back
+                </p>
+
+                <h2>Why can't I see my/my friends' accessories/hair/face/etc ?</h2>
+                <p>
+                    Most likely because you or your friends using a conflicting mod. Again, conflicting mods are as
+                    follows:
+                    Risenio FPS Utils, FPS Booster, PinkiePie's Datacenter, Arborean Apparel, Cosplayer, Surgeon,
+                    Quickload,
+                    No More Crazy Capes
+                </p>
+
+                <h2>When I use my Marrow/Dracoloth brooch, my face and voice resets ?</h2>
+                <p>
+                    In config, toggle on "Ignore brooch transformations"
+                </p>
+
+                <h2>Where are my character profiles saved ?</h2>
+                <p>
+                    Accessible from "Proxy\mods\unicast\saves" and can be moved at will
+                </p>
+
+                <h2>Why isn't the UI opening ?</h2>
+                <p>1. Make sure both Unicast and Toolbox are working properly in your console</p>
+                <p>2. Try resetting your UI position in game settings</p>
+                <p>3. Check to make sure your awesomium is intact and working. (If your TERA store will open, it is)</p>
+
+
+                <h2>Why can't I see footsteps ?</h2>
+                <p>
+                    You have to enable Travel Effects in your base game. This doesn't have to do with Unicast
+                </p>
+
+                <h2>When will Unicast get XXX costume ?</h2>
+                <p>
+                    When it exists in your region's client. Meaning, we can't put files that don't exist into your game,
+                    it
+                    doesn't work like that
+                </p>
+            </div>
+        </div>
+        <!-- How to use -->
+        <div v-if="activeTab === 6">
+            <div class="container">
+                <h2>Discord (TERA Toolbox Private)</h2>
+
+                <div style="background:#ddd;color:#000;padding:0 10px;text-align:center;">
+                    For all questions, join discord: <a style="font-size:1.5em;" @click="_tera_client_proxy_.open_web('https://discord.gg/CZMYNhXwwS')">discord.gg/CZMYNhXwwS</a>
+                </div>
+
+                <h2>Usage</h2>
+                <p>Most functions can be accessed from the UI</p>
+
+                <p>Prefix: u (ex: u reset, u ui)</p>
+                <p>Always use commands in /8 Proxy channel:</p>
+
+                <p>u ui -> opens ui (alternatively use "ctrl + shift + u")</p>
+
+                <p>u reset slot -> resets a slot (resets all if no slot is specified - ex: u reset body, u reset)</p>
+
+                <p>u equip itemId -> equips an item by id</p>
+
+                <p>u toggle -> toggles mod on or off</p>
+
+                <p>u connect -> connects to the costume server</p>
+
+                <p>u disconnect -> disconnects from the costume server</p>
+
+                <p>u refresh -> refreshes other mod user's appearance</p>
+
+
+                <h2>Themes</h2>
+                <p>
+                    Select your custom or pre-made theme from the config window ! Change them freely. To create your
+                    own,
+                    navigate to the "unicast\ui\css\themes" folder to get started
+                </p>
+
+                <h2>Race & Idle Change </h2>
+
+                <p>- You can only Race Change if the race+gender combo allows it. (Ex: Elin Priest can become any
+                    race+gender, Valkryies can only be castanic female)</p>
+                <p>- Idles can only be swapped if there is an alternative idle. (Ex: Elin Priest can use Ninja,
+                    Brawler, or
+                    Default idle, Valkyries can only use the Default castanic female idle)</p>
+                <p>- Idles will temporarily revert when a skill is used. (This is to prevent desync in combat)</p>
+                <p>- Unicast selected idles will resume after some time out of combat. (To speed up the transformation,
+                    talk to an npc or use an emote)</p>
+
+            </div>
+        </div>
+
+        <!-- Notice -->
+        <div v-if="!config.online" class="notice" v-cloak>
+            <div class="notice-text">
+                Online Mode is now available! Go to <i class="fa fa-cog"></i> for enable.
+            </div>
+        </div>
+        <link rel="stylesheet" :href="'./css/themes/'+ config.theme +'.css'">
+    </div>
+</body>
+
+</html>

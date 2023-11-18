@@ -1,7 +1,9 @@
-# Unicast
+# Unicast for TERA Private Servers
 
 Costume and appareance changer for TERA with in-game UI.   
 There is support for Online Mode, allowing other users of the module to see your changes.
+
+**Full support for patches 92 and 100, including Menma's TERA (MT) and Asura TERA.**
 
 ## Commands
 

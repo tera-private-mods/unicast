@@ -1,0 +1,725 @@
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  font: normal 18px Arial, Helvetica, sans-serif;
+}
+
+*:not(input) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html {
+  width: 440px;
+  height: 700px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-weight: 700;
+  box-sizing: border-box;
+  background-color: rgb(54,57,63);
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  color: #D8DEE9;
+}
+
+form {
+  padding-bottom: 5px;
+}
+
+.itemRow {
+  background-color: rgb(72, 75, 81);
+  height: 58px;
+  width: 100%;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.rowContent {
+  float: right;
+  width: 370;
+}
+.rowContent *{
+  margin: 3px;
+}
+
+.aeroRow {
+  height: 25px;
+}
+.aeroContent {
+  font-size: 16px;
+  float: none;
+}
+
+.aeroContent div{
+  display: inline-block;
+}
+.aero {
+  position: absolute;
+  top: 5px;
+  left: 95%;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background-color: red;
+}
+.activeAero {
+  background-color: #3e8e41;
+}
+
+.aeroRow {
+  position: relative;
+  height: 25px;
+}
+
+.aeroContent {
+  float: none;
+}
+
+.aeroContent p{
+  font-size: 16px;
+}
+
+.bookmarks-icon {
+  padding-left: 5px;
+}
+.rowIcon {
+  float: left;
+  width: 70px;
+}
+
+.bookmarked {
+  color: yellow;
+}
+
+.searchInput input{
+width: 100%;
+color: rgb(218, 218, 218);
+text-align: center;
+padding: 10px;
+border-bottom: 1px solid #7289DA;
+background: transparent;
+}
+
+.searchInput input:focus{
+  color: white;
+  outline: none;
+  border-bottom: 2px solid #7289DA;
+}
+
+.icon {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  border: 3px solid #99AAB5;
+  margin: 2;
+}
+
+.activeIcon {
+  border: 3px solid #7289DA;
+}
+
+div.charIcons .icon {
+  margin: 1;
+}
+
+div.charIcons {
+width: 435px;
+position: relative;
+display: block;
+margin: 0 auto;
+}
+
+.charIcons img {
+  display: inline;
+  }
+
+div.equippedItems {
+  width: 30%;
+  position: relative;
+  display: block;
+  margin: 0 auto;
+}
+
+.NavBar {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.NavBar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #23272A;
+}
+
+.NavBar li {
+  display: inline;
+  float: left;
+}
+
+.NavBar li a {
+  display: block;
+  font-size: 21px;
+  color: white;
+  text-align: center;
+  padding: 10px 12px;
+  text-decoration: none;
+  border-right: 1.5px solid #2C2F33;
+}
+
+
+.NavBar li:hover {
+  background-color: rgb(54, 57, 63);
+}
+
+.SubNavBar {
+  width: 100%;
+  margin: 2;
+  padding: 0;
+}
+
+.SubNavBar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: rgb(47, 49, 54);
+}
+
+.SubNavBar li {
+  display: inline;
+  float: left;
+}
+
+.SubNavBar li:hover {
+  background-color: rgb(54, 57, 63);
+}
+/*
+.SubNavBar li a {
+  -moz-box-shadow:inset 0px 1px 3px 0px #bdf0e9;
+  -webkit-box-shadow:inset 0px 1px 3px 0px #bdf0e9;
+  box-shadow:inset 0px 1px 3px 0px #bdf0e9;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #66abb3), color-stop(1, #244f4f));
+  background:-moz-linear-gradient(top, #66abb3 5%, #244f4f 100%);
+  background:-webkit-linear-gradient(top, #66abb3 5%, #244f4f 100%);
+  background:-o-linear-gradient(top, #66abb3 5%, #244f4f 100%);
+  background:-ms-linear-gradient(top, #66abb3 5%, #244f4f 100%);
+  background:linear-gradient(to bottom, #66abb3 5%, #244f4f 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#66abb3', endColorstr='#244f4f',GradientType=0);
+  background-color:#66abb3;
+  border:1px solid #658a7e;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+  font-family:Arial;
+  font-size:15px;
+  font-weight:bold;
+  padding:11px 23px;
+  text-decoration:none;
+  text-shadow:0px -1px 0px #224741;
+}
+*/
+
+.SubNavBar li a {
+  display: block;
+  font-size: 21px;
+  color: white;
+  text-align: center;
+  padding: 10px 12px;
+  text-decoration: none;
+  border-right: 1px solid #23272A;
+  margin-top: -3px;
+  margin-bottom: -8px;
+}
+
+.SubNavActiveLink {
+  background-color: rgb(66,70,77);
+  position:relative;
+  top:1px;
+}
+
+.NavActiveLink {
+  background-color: rgb(66,70,77);
+}
+
+.SubSubNavBar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: rgb(66, 70, 77);
+}
+
+.paginate-links li {
+  display: inline-block;
+  margin: 0 0.3px;
+}
+
+.paginate-links ul {
+  width: 100%;
+  text-align: center;
+}
+
+.paginate-links a {
+  margin: 1px;
+  color: #fff;
+  float: left;
+  padding: 4px 10px;
+  text-decoration: aqua;
+  border: 1px solid #7289DA; /* Gray */
+}
+
+ul.paginate-links li.active a {
+  background-color: #7289DA;
+  color: #14142b;
+}
+
+ul.paginate-links .left-arrow a {
+  margin-right: 5px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+ul.paginate-links .right-arrow a {
+  margin-left: 5px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+input.app-slider {
+  width: 80%;
+}
+
+input[type='number'].app-input {
+  width: 60px;
+}
+
+::-webkit-scrollbar { width: 5px; height: 3px;}
+::-webkit-scrollbar-button {  background-color: #666; }
+::-webkit-scrollbar-track {  background-color: #646464;}
+::-webkit-scrollbar-track-piece { background-color: #000;}
+::-webkit-scrollbar-thumb { height: 50px; background-color: #666;}
+::-webkit-scrollbar-corner { background-color: #646464;}
+::-webkit-resizer { background-color: #666;}
+
+.dyePopup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.dyePopup .popuptext {
+  visibility: hidden;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 100%;
+  margin-left: -80px;
+}
+/* Popup arrow */
+.dyePopup .popuptext::after {
+  content: "";
+  position: absolute;
+  bottom: 150%;
+  left: 100%;
+}
+.dyePopup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+.app-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+}
+
+.app-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; 
+  background: #7289DA;
+  cursor: pointer;
+}
+
+.app-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #7289DA;
+  cursor: pointer;
+}
+
+h2 {
+  margin-top: 20px;
+  font-size: 24px;
+  border-bottom: 1px solid #000
+}
+
+h2:first-child{
+  margin-top: 10px;
+}
+
+.shape:first-child{
+  margin-top: 10px;
+}
+
+.dropconfig {
+  width: 100%;
+}
+/* Style The Dropdown Button */
+.dropthemes {
+  min-width: 100%;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.dropbtn {
+  background-color: #7289DA;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  min-width: 100px;
+  border-radius: 50%;
+}
+.buttons {
+  margin-left: 85px;
+}
+.button {
+
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.buttons a{
+  background-color: #7289DA;
+  border: none;
+  color: white;
+  padding: 15px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 50%
+}
+
+.buttons a:hover{
+  background-color: #8496d6;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #8496d6}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: #7289DA;
+}
+
+.presetbtn {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  width: 20%;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 21px;
+  margin: 0px;
+}
+
+.presetInput input{
+  width: 347px;
+  color: rgb(218, 218, 218);
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid #7289DA;
+  background: transparent;
+  margin-right: 0px;
+  }
+  
+  .presetInput input:focus{
+    color: white;
+    outline: none;
+    border-bottom: 2px solid #7289DA;
+  }
+
+.equipped-container {
+    margin: 0 auto;
+    width: 420px;
+}
+
+.equipped-row {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.dye-costume {
+    background: url(https://static.teragame.su/unicast-data/icons/dye_result_random_tex.png);
+    background-size: 32px;
+    position: absolute;
+    top: 16;
+    left: 76;
+    width: 32px;
+    height: 32px;
+    margin-left: 32px;
+}
+
+.dye-costume-slot {
+    background-image: url(https://static.teragame.su/unicast-data/slots/slot.png);
+    background-size: 32px;
+    position: absolute;
+    top: 16;
+    left: 76;
+    width: 32px;
+    height: 32px;
+    margin-left: 32px;
+}
+
+.equipped-costume {
+    background-size: 58px;
+    background-repeat: no-repeat;
+    width: 64px;
+    height: 64px;
+    border-radius: 5px;
+    margin-left: 32px;
+}
+
+.equipped-slot {
+    background-image: url(https://static.teragame.su/unicast-data/slots/slot.png);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 64px;
+    margin-left: 32px;
+}
+
+.equipped-gear {
+    position: absolute;
+    background-size: 58px;
+    background-repeat: no-repeat;
+    top: 0;
+    left: 356;
+    width: 64px;
+    height: 64px;
+    border-radius: 5px;
+    margin-left: -32px;
+}
+
+.equipped-slot-gear {
+    background-image: url(https://static.teragame.su/unicast-data/slots/slot.png);
+    position: absolute;
+    top: 0;
+    left: 356;
+    width: 64px;
+    height: 64px;
+    margin-left: -32px;
+}
+
+.dye-gear {
+    background: url(https://static.teragame.su/unicast-data/icons/dye_result_random_tex.png);
+    background-size: 32px;
+    position: absolute;
+    top: 16;
+    left: 314;
+    width: 32px;
+    height: 32px;
+    margin-left: -32px;
+}
+
+.dye-gear-slot {
+    background-image: url(https://static.teragame.su/unicast-data/slots/slot.png);
+    background-size: 32px;
+    position: absolute;
+    top: 16;
+    left: 314;
+    width: 32px;
+    height: 32px;
+    margin-left: -32px;
+}
+
+.dye-costume-popup {
+  position: relative;
+  visibility: hidden;
+  z-index: 1;
+}
+
+.dye-costume-slot:hover .dye-costume-popup {
+  visibility: visible;
+  z-index: 1;
+}
+
+.dye-costume-popup .vc-chrome {
+  position: absolute;
+  top:0px;
+  left: 32px;
+  }
+
+.dye-gear-popup {
+  position: relative;
+  visibility: hidden;
+  z-index: 1;
+}
+
+.dye-gear-slot:hover .dye-gear-popup {
+  visibility: visible;
+  z-index: 1;
+}
+
+.dye-gear-popup .vc-chrome {
+position: absolute;
+top:0px;
+left: -225px;
+}
+
+.vc-chrome-saturation-wrap {
+  z-index: 1;
+}
+
+.tooltip-costume {
+  position: relative;
+  visibility: hidden;
+  z-index: 1;
+}
+
+.tooltip-costume div {
+  position: absolute;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  width:128px;
+  top:-32px;
+  left: 64px;
+}
+
+.equipped-slot:hover .tooltip-costume {
+  visibility: visible;
+}
+
+.tooltip-gear {
+  position: relative;
+  visibility: hidden;
+  z-index: 1;
+}
+
+.tooltip-gear div {
+  position: absolute;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  width:128px;
+  top:-32px;
+  left: -128px;
+}
+
+.equipped-slot-gear:hover .tooltip-gear {
+  visibility: visible;
+}
+
+.swapper {
+  background-image: url(https://static.teragame.su/unicast-data/slots/swap.png);
+  background-size: 48px;
+  position: absolute;
+  top: 10px;
+  left: 180px;
+  height: 48px;
+  width: 48px;
+}
+
+.config {
+  background-color: rgb(24, 24, 27);
+  width: 340px;
+  height: 100%;
+  margin-left: 40px;
+  padding: 10px;
+}
+
+.config input:not(input[range]){
+  margin-left: 15%;
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+  padding: 10px;
+}
+
+.equipped-container {
+  background-image: url(https://static.teragame.su/unicast-data/slots/unicast.png);
+  background-repeat: no-repeat;
+  background-size: 64px;
+  background-position: 100% 100%
+}
+
+.vc-chrome {
+  padding: 20px;
+  background-color: #fff;
+}

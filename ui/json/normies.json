@@ -1,0 +1,143 @@
+{
+	"7000001": {
+		"id": 7000001,
+		"name": "Shape Change: Big Head",
+		"type": "changer",
+		"icon": "icon_deadoo_ab_tex"
+	},
+	"7000004": {
+		"id": 7000004,
+		"name": "Shape Change: Thighs",
+		"type": "changer",
+		"icon": "icon_yookduk00_ab_tex"
+	},
+	"7000005": {
+		"id": 7000005,
+		"name": "Shape Change: Size",
+		"type": "changer",
+		"icon": "icon_janggoe_ab_tex"
+	},
+	"7000002": {
+		"id": 7000002,
+		"name": "Physical Change: Breast",
+		"type": "changer",
+		"icon": "icon_poongu_ab_tex"
+	},
+	"7000003": {
+		"id": 7000003,
+		"name": "Physical Change: Height",
+		"type": "changer",
+		"icon": "icon_jangshin_ab_tex"
+	},
+	"7000015": {
+		"id": 7000015,
+		"name": "Physical Change: Size",
+		"type": "changer",
+		"icon": "icon_janggoe_ab_tex"
+	},
+	"922": {
+		"id": 922,
+		"name": "Superior Noctenium Elixir",
+		"icon": "noctan_tex"
+	},
+	"3000": {
+		"id": 3000,
+		"name": "Energy of Dark Red Wings",
+		"icon": "battlefield_high_ranking_tex"
+	},
+	"3001": {
+		"id": 3001,
+		"name": "Energy of Dark Soul",
+		"icon": "battlefield_high_ranking_tex"
+	},
+	"4767": {
+		"id": 4767,
+		"name": "Argon Purification Potion",
+		"icon": "potion9_tex"
+	},
+	"4884": {
+		"id": 4884,
+		"name": "Ice Cream Dream",
+		"icon": "colourful_icecream_tex"
+	},
+	"70462": {
+		"id": 70462,
+		"name": "Shield",
+		"icon": "balanceup_tex"
+	},
+	"457053": {
+		"id": 457053,
+		"name": "Akeron's Blessing",
+		"icon": "darkriftgravity_tex"
+	},
+	"468015": {
+		"id": 468015,
+		"name": "Bloodshard Enhancement",
+		"icon": "valrhona_devil_tex"
+	},
+	"950327": {
+		"id": 950327,
+		"name": "Dark Spirit",
+		"icon": "noicon"
+	},
+	"950328": {
+		"id": 950328,
+		"name": "Earth Spirit",
+		"icon": "noicon"
+	},
+	"950329": {
+		"id": 950329,
+		"name": "Fire Spirit",
+		"icon": "noicon"
+	},
+	"950435": {
+		"id": 950435,
+		"name": "Relentless",
+		"icon": "immunedebuff_tex"
+	},
+	"7000019": {
+		"id": 7000019,
+		"name": "Self-Confidence",
+		"icon": "icon_yookduk00_ab_tex"
+	},
+	"7000020": {
+		"id": 7000020,
+		"name": "False Modesty",
+		"icon": "icon_yookduk00_ab_tex"
+	},
+	"45000120": {
+		"id": 45000120,
+		"name": "Acrophobia",
+		"icon": "fearstatus_tex"
+	},
+	"97950009": {
+		"id": 97950009,
+		"name": "Darkan's Wings",
+		"icon": "descentofdarkness_tex"
+	},
+	"97950013": {
+		"id": 97950013,
+		"name": "Darkan's Azure Wings",
+		"icon": "descentofdarkness1_tex"
+	},
+	"97950014": {
+		"id": 97950014,
+		"name": "Darkan's Verdant Wings",
+		"icon": "descentofdarkness2_tex"
+	},
+	"97950015": {
+		"id": 97950015,
+		"name": "Darkan's Midnight Wings",
+		"icon": "descentofdarkness3_tex"
+	},
+	"97950016": {
+		"id": 97950016,
+		"name": "Darkan's Heartfire Wings",
+		"icon": "descentofdarkness4_tex"
+	},
+	"999001024": {
+		"id": 999001024,
+		"name": "Fire Heart",
+		"icon": "refine_heart16_tex"
+	}
+}

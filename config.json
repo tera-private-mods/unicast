@@ -1,0 +1,20 @@
+{
+	"enabled": true,
+	"online": true,
+	"ignoreChangers": false,
+	"ignoreAbnormals": false,
+	"ignorePets": false,
+	"hidePetNames": false,
+	"ignoreRainbow": false,
+	"blockIdles": false,
+	"browserHeight": "720",
+	"minChangerValue": -10,
+	"maxChangerValue": 10,
+	"theme": "Default",
+	"camera": 0,
+	"ignoreMarrow": false,
+	"mutePets": false,
+	"hideMotes": false,
+	"ignoreRestyle": false,
+	"fov": 0
+}

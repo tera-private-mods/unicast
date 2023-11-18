@@ -1,0 +1,905 @@
+html {
+  background-color: rgb(255, 206, 206);
+  overflow-x: hidden;
+}
+
+*:not(input) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@font-face {
+  font-family: 'Short Stack';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://static.teragame.su/unicast-data/fonts/short-stack-v9-latin-regular.svg#ShortStack') format('svg');
+}
+
+body,
+textarea,
+input,
+select {
+  background: 0;
+  border-radius: 0;
+  color: #D8D8D8;
+  font-family: 'Short Stack', Arial;
+  font-size: 16px;
+  margin: 0
+}
+
+.addon,
+.btn-sm,
+.nav,
+.subnav,
+.footer,
+textarea,
+input,
+select {
+  outline: 0;
+  font-size: 12px
+}
+
+.nav,
+.subnav {
+  font-size: 0px
+}
+
+.smooth {
+  -webkit-transition: all .2s
+}
+
+.btn,
+.footer a,
+.nav a,
+.subnav a {
+  text-decoration: none
+}
+
+.container {
+  margin: 0 10px 0 40px;
+  width: auto;
+  color: #000;
+}
+
+.container-a {
+  margin: 0 10px;
+  width: auto;
+}
+
+.container-a img {
+  margin: 0 auto 3px 18%;
+}
+
+.container-a h3 {
+  color: #632032;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid rgb(83, 83, 83);
+  width: 100%;
+}
+
+.container-b {
+  position: relative;
+  margin-bottom: 5px;
+}
+
+.buttons {
+  text-align: center;
+}
+
+.navcontainer {
+  margin: 0 30px;
+  width: auto;
+}
+
+.content {
+  color: #632032;
+  position: relative;
+  border-radius: 3px;
+  background-color: rgb(255, 162, 162);
+  margin-top: 10px;
+  border: 1px solid rgb(224, 224, 224);
+  box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.2);
+  padding: 8px 12px
+}
+
+.content div {
+  display: inline-block
+}
+
+.icon {
+  width: 12%;
+  display: inline-block;
+}
+
+.icon img {
+  height: 36px;
+  width: 36px;
+  border-radius: 5px;
+  border: 2px solid rgba(255, 174, 179, 0.836);
+  box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.20);
+}
+
+.icon .active {
+  border: 2px solid #ff1e30;
+  box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.20);
+}
+
+.bookmark-icon {
+  z-index: 9;
+  position: absolute;
+  top: 8px;
+  left: 95%;
+  color: rgba(255, 255, 255, 0.30);
+  font-weight: 100;
+}
+
+.bookmarked {
+  color: #632032;
+}
+
+.list {
+  min-height: 40px;
+}
+
+.list-icon {
+  vertical-align: middle;
+  background-color: rgba(255, 255, 255, 0.30);
+  border-radius: 50%;
+  content: "";
+  height: 13px;
+  width: 13px;
+}
+
+.activelist {
+  background-color: rgba(255, 255, 255, 0.829);
+}
+
+.list-text {
+  display: inline-block;
+  font-size: 12px;
+  max-width: 310px;
+  word-wrap: break-word;
+  vertical-align: middle;
+}
+
+.entry {
+  vertical-align: top;
+  width: 81%;
+}
+
+.btn {
+  background: #fa8686;
+  border-radius: 6px;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  margin: 2px 0;
+  padding: 6px 15px 7px
+}
+
+.btn:hover {
+  background: #ffa0a0
+}
+
+.btn:active,
+.btn:focus {
+  background: #ffabab
+}
+
+.btn-a {
+  background: #0ae
+}
+
+.btn-a:hover {
+  background: #09d
+}
+
+.btn-a:active,
+.btn-a:focus {
+  background: #08b
+}
+
+.btn-b {
+  background: #3c5
+}
+
+.btn-b:hover {
+  background: #2b4
+}
+
+.btn-b:active,
+.btn-b:focus {
+  background: #2a4
+}
+
+.btn-c {
+  background: #d33
+}
+
+.btn-c:hover {
+  background: #c22
+}
+
+.btn-c:active,
+.btn-c:focus {
+  background: #b22
+}
+
+.btn-sm {
+  border-radius: 4px;
+  padding: 10px 14px 11px
+}
+
+label>* {
+  display: inline
+}
+
+form>* {
+  display: block;
+  margin-bottom: 10px
+}
+
+textarea,
+input,
+select {
+  border: 1px solid #632032;
+  padding: 8px
+}
+
+textarea:focus,
+input:focus,
+select:focus {
+  border-color: #5ab
+}
+
+textarea,
+input[type=text] {
+  -webkit-appearance: none;
+  width: 13em;
+  outline: 0
+}
+
+input[type=textbox] {
+  color: #632032;
+  background-color: rgb(255, 206, 206);
+}
+
+input[type=number] {
+  color: #632032;
+  background-color: rgb(255, 206, 206);
+}
+
+.addon {
+  color: #632032;
+  box-shadow: 0 0 0 1px rgb(83, 83, 83);
+  padding: 8px 12px
+}
+
+.nav .navcontainer {
+  margin: 0;
+}
+
+.nav {
+  /*box-shadow: 0 0 0 1px #ccc;*/
+  z-index: 99;
+  position: fixed;
+  float: left;
+  height: 100%;
+  width: 30px;
+  text-align: center;
+  background-color: rgb(255, 162, 162);
+}
+
+.nav a {
+  display: block;
+  padding: 10px 0 10px 0;
+  width: 100%;
+  color: white;
+  position: relative;
+  border-bottom: 1px solid #632032;
+  top: -1px
+}
+
+
+.nav .pagename {
+  font-size: 20px;
+  top: 1px
+}
+
+.nav .current {
+  background-color: rgb(255, 123, 123);
+  color: #fff
+}
+
+.subnav {
+  /*box-shadow: 0 0 0 1px #ccc;*/
+  background-color: rgb(255, 162, 162);
+  border-bottom: 1px solid #632032;
+}
+
+.subnav a {
+  height: 20px;
+  color: white;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+  position: relative;
+  border-right: 1px solid #632032;
+}
+
+.subnav .pagename {
+  font-size: 18px;
+}
+
+.subnav .current {
+  background-color: rgb(255, 123, 123);
+  color: #fff
+}
+
+.pagename:hover {
+  background-color: rgb(255, 123, 123);
+}
+
+.footer {
+  margin-left: -30px;
+  margin-top: 18px;
+  margin-bottom: 15px;
+  height: 20px;
+}
+
+.footer a {
+  background-color: #fa8686;
+  height: 20px;
+  border-radius: 3px;
+  border: 0;
+  box-shadow: 0 0 0 1px rgb(212, 212, 212);
+  padding: 8px 12px;
+}
+
+.footer .current {
+  background-color: #ffabab;
+  color: #fff
+}
+
+.footer .pagination {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.footer .pagination:hover {
+  background-color: #ffa0a0;
+}
+
+.table th,
+.table td {
+  font-size: 14px;
+  padding: .2em;
+  text-align: left
+}
+
+.table tbody>:nth-child(2n-1) {
+  background: rgb(66, 66, 66)
+}
+
+.ico {
+  font: 33px Arial Unicode MS, Lucida Sans Unicode
+}
+
+.filter {
+  margin-top: 2px;
+  width: auto;
+}
+
+.filter input {
+  border: 0;
+  border-bottom: 1px solid #632032;
+  width: 80%;
+  height: 27px;
+}
+
+.filter input:focus {
+  color: #ffffff;
+  outline: none;
+  border-bottom: 1px solid #000000;
+}
+
+.separator {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #632032;
+}
+
+.selected-sort {
+  color: white;
+  background-color: #e45d5d;
+  box-shadow: 0 0 0 1px rgb(83, 83, 83);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.slider-header {
+  color: #632032;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid #632032;
+  font-size: 20px;
+  width: 100%;
+}
+
+.app-slider {
+  -webkit-appearance: none;
+  vertical-align: middle;
+  display: inline-block;
+  width: 80%;
+  height: 2px;
+  padding: 0;
+  background: #632032;
+  border: 1px;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.app-slider:hover {
+  opacity: 1;
+}
+
+.app-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #632032;
+  background: #ff1e30;
+  cursor: pointer;
+}
+
+.app-input {
+  vertical-align: middle;
+  width: 18%;
+}
+
+.slider-container p {
+  color: #632032;
+  margin-bottom: -15px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  border-radius: 17px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(60, 60, 60);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.switch-slider:before {
+  border-radius: 50%;
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked+.switch-slider {
+  background-color: #4fcebd;
+}
+
+input:focus+.switch-slider {
+  box-shadow: 0 0 1px #4fcebd;
+}
+
+input:checked+.switch-slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px);
+}
+
+.config-label {
+  vertical-align: middle;
+}
+
+.config-slider {
+  margin-top: 13px;
+  width: 99%;
+}
+
+.equipped-slot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  margin-left: 32px;
+  border-radius: 50%;
+}
+
+.equipped-slot-gear {
+  position: absolute;
+  top: 0;
+  left: 356;
+  width: 36px;
+  height: 36px;
+  margin-left: -32px;
+  border-radius: 50%;
+}
+
+.equipped-costume {
+  border-radius: 5px;
+  border: 2px solid white;
+  box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.20);
+  background-size: 36px;
+  background-repeat: no-repeat;
+  width: 36px;
+  height: 36px;
+  margin-left: 32px;
+  border-radius: 50%;
+}
+
+.equipped-gear {
+  position: absolute;
+  border-radius: 5px;
+  border: 2px solid white;
+  box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.20);
+  background-size: 36px;
+  background-repeat: no-repeat;
+  top: 0;
+  left: 85%;
+  width: 36px;
+  height: 36px;
+  margin-left: -32px;
+  border-radius: 50%;
+}
+
+.dye-costume {
+  border-radius: 5px;
+  border: 2px solid rgba(100, 100, 100, 0.60);
+  box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.20);
+  background: url(https://static.teragame.su/unicast-data/icons/dye_result_random_tex.png);
+  background-size: 32px;
+  position: absolute;
+  top: 3;
+  left: 46px;
+  width: 32px;
+  height: 32px;
+  margin-left: 32px;
+}
+
+.dye-costume-slot {
+  background-size: 32px;
+  position: absolute;
+  top: 3;
+  left: 46px;
+  width: 32px;
+  height: 32px;
+  margin-left: 32px;
+}
+
+.dye-gear {
+  border-radius: 5px;
+  border: 2px solid rgba(100, 100, 100, 0.60);
+  box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.20);
+  background: url(https://static.teragame.su/unicast-data/icons/dye_result_random_tex.png);
+  background-size: 32px;
+  position: absolute;
+  top: 3;
+  left: 74%;
+  width: 32px;
+  height: 32px;
+  margin-left: -32px;
+}
+
+.dye-gear-slot {
+  background-size: 32px;
+  position: absolute;
+  top: 3;
+  left: 74%;
+  width: 32px;
+  height: 32px;
+  margin-left: -32px;
+}
+
+.dye-costume-popup {
+  position: relative;
+  visibility: hidden;
+  z-index: 1;
+}
+
+.dye-costume-slot:hover .dye-costume-popup {
+  visibility: visible;
+  z-index: 1;
+}
+
+.dye-costume-popup .vc-chrome {
+  position: absolute;
+  top: 0px;
+  left: 32px;
+}
+
+.dye-gear-popup {
+  position: relative;
+  visibility: hidden;
+  z-index: 1;
+}
+
+.dye-gear-slot:hover .dye-gear-popup {
+  visibility: visible;
+  z-index: 1;
+}
+
+.dye-gear-popup .vc-chrome {
+  position: absolute;
+  top: 0px;
+  left: -225px;
+}
+
+.vc-chrome-saturation-wrap {
+  z-index: 1;
+}
+
+.tooltip-costume {
+  position: relative;
+  visibility: hidden;
+  z-index: 1;
+}
+
+.tooltip-costume div {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  width: 168px;
+  top: -9px;
+  left: 64px;
+}
+
+.equipped-slot:hover .tooltip-costume {
+  visibility: visible;
+}
+
+.tooltip-gear {
+  position: relative;
+  visibility: hidden;
+  z-index: 1;
+}
+
+.tooltip-gear div {
+  position: absolute;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  width: 128px;
+  top: -32px;
+  left: -128px;
+}
+
+.equipped-slot-gear:hover .tooltip-gear {
+  visibility: visible;
+}
+
+.swapper {
+  background-image: url(https://static.teragame.su/unicast-data/slots/swap.png);
+  background-size: 36px;
+  position: absolute;
+  top: 0px;
+  left: 160px;
+  height: 36px;
+  width: 36px;
+}
+
+.equipped-headers h2 {
+  color: #632032;
+  margin: 0 -40px 0 0;
+  display: inline-block;
+  width: 49%;
+}
+
+.gear-header {
+  text-align: right;
+}
+
+.nametag input {
+  width: 100%;
+}
+
+.vc-chrome {
+  padding: 20px;
+  background-color: #fff;
+}
+
+.dropbtn {
+  text-align: center;
+  font-size: 14px;
+  padding: 4px 0;
+  border: 0;
+  margin: 0;
+  display: inline-block;
+  min-width: 95px;
+  color: white;
+  background-color: rgb(255, 166, 172);
+}
+
+.body-bar .dropbtn {
+  border-bottom: rgb(255, 206, 209);
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  font-size: 14px;
+  background-color: rgb(255, 123, 123);
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  width: 100%;
+  display: block;
+}
+
+.dropbtn:hover {
+  background-color: rgb(255, 123, 123);
+}
+
+.dropdown-content .dropdown-item:hover {
+  color: #632032;
+  background-color: rgb(255, 206, 209);
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropconfig {
+  width: 100%;
+}
+
+.dropconfig-content {
+  min-width: 338px;
+}
+
+.body-bar {
+  box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.10);
+  border: 1px solid rgb(211, 211, 211);
+  border-top: 0;
+  font-size: 0;
+  width: 100%;
+  height: auto;
+}
+
+.theme-bar {
+  color:white;
+  box-shadow: 0px 3px 9px 1px rgba(0, 0, 0, 0.10);
+  border: 1px solid rgb(211, 211, 211);
+  border-top: 0;
+}
+
+.gender {
+  width: 100%;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.genderlabel {
+  color: #632032;
+  position: relative;
+  padding-left: 30px;
+}
+
+.genderlabel input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  border: 1px solid rgba(255, 30, 49, 0.10);
+  background-color: white;
+  border-radius: 50%;
+}
+
+.genderlabel:hover input~.checkmark {
+  background-color: rgba(255, 30, 49, 0.10);
+  ;
+}
+
+.genderlabel input:checked~.checkmark {
+  background-color: rgba(255, 30, 49, 0.40);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.genderlabel input:checked~.checkmark:after {
+  display: block;
+}
+
+.genderlabel .checkmark:after {
+  top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+.logo {
+  height: 100%;
+  background-image: url(https://static.teragame.su/unicast-data/slots/unicast.png);
+  background-repeat: no-repeat;
+  background-size: 64px;
+  background-position: 100% 98%;
+}
+
+.config {
+  color: #632032;
+}
+
+.fa-star:before{content:"\f004"}
+
+.notice-text {
+  padding-top: 2px;
+}
