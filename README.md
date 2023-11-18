@@ -1,4 +1,4 @@
-# Unicast for TERA Private Servers
+# Unicast
 
 Costume and appareance changer for TERA with in-game UI.   
 There is support for Online Mode, allowing other users of the module to see your changes.
