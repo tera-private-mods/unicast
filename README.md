@@ -3,7 +3,7 @@
 Costume and appareance changer for TERA with in-game UI.   
 There is support for Online Mode, allowing other users of the module to see your changes.
 
-**Full support for patches 92 and 100, including Agaia Online and Asura TERA.**
+**Full support for patches 92 and 100, including Agaia Online, Arborea Reborn and Asura TERA.**
 
 ## Commands
 
