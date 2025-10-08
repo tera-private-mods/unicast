@@ -3,11 +3,11 @@
     "dependencies": {
         "ui": "https://raw.githubusercontent.com/HakuryuuDom/ui/master/module.json"
     },
-    "description": "Costume and appareance changer with in-game UI. Full support for patches 92 and 100, including Menma's TERA (MT) and Asura TERA.",
+    "description": "Costume and appareance changer with in-game UI. Full support for patches 92 and 100, including Agaia Online, Arborea Reborn and Asura TERA.",
     "disableAutoUpdate": false,
     "name": "unicast",
     "options": {
-        "guiName": "Unicast (patch 92/100/MT)",
+        "guiName": "Unicast (patch 92/100)",
         "cliName": "Unicast"
     },
     "servers": ["https://raw.githubusercontent.com/tera-private-mods/unicast/master/","https://git.teragame.su/tera-private-mods/unicast/raw/master/"]
